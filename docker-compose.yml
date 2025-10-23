@@ -1,0 +1,69 @@
+
+services:
+  tupp_server_nginx:
+    build:
+      context: ./docker_stack/nginx/.
+    depends_on:
+      - tupp_php_82
+      - tupp_mysql_8
+    container_name: tupp_server_nginx
+    ports:
+      - 8081:80
+    volumes:
+      - ./backend:/var/www/html
+    networks:
+      - tupp_network
+  tupp_php_82:
+    build:
+      context: ./docker_stack/php/.
+    container_name: tupp_php_82
+    volumes:
+      - ./backend:/var/www/html
+      - ./docker_stack/php/php.ini:/usr/local/etc/php/php.ini
+    networks:
+      - tupp_network
+  tupp_mysql_8:
+    image: mysql:8.0.28
+    container_name: tupp_mysql_8
+    command: --default-authentication-plugin=mysql_native_password --max_allowed_packet=42505856 --general-log=1 --general-log-file=/logs/general-log.log
+    restart: always
+    ports:
+      - 3310:3306
+    volumes:
+      - vol-mysql-tupp:/var/lib/mysql
+      - ./docker_stack/mysql/logs:/logs
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    networks:
+      - tupp_network
+  tupp_vue3:
+    build:
+      context: ./frontend
+      dockerfile: ../docker_stack/vue/Dockerfile
+    container_name: tupp_vue3
+    ports:
+      - 5173:5173
+    volumes:
+      - ./frontend:/app
+    environment:
+      - NODE_ENV=development
+      - VITE_API_BASE_URL=http://localhost:8081
+    command: ["sh", "-c", "npm install && npm run dev -- --host 0.0.0.0 --port 5173"]
+    depends_on:
+      - tupp_php_82
+    networks:
+      - tupp_network
+networks:
+  tupp_network:
+    name: tupp_network
+volumes:
+  vol-mysql-tupp:
+    name: vol-mysql-tupp
+
+
+
+
+
