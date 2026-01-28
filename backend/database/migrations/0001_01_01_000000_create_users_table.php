@@ -35,6 +35,37 @@ return new class extends Migration
             $table->longText('payload');
             $table->integer('last_activity')->index();
         });
+
+        Schema::create('rutas', function (Blueprint $table) {
+            $table->id();
+            $table->string('titulo', 100);
+            $table->string('color', 7);
+            $table->timestamps();
+        });
+
+        Schema::create('metas', function (Blueprint $table) {
+            $table->id();
+            $table->string('titulo', 100);
+
+            // FK hacia Rutas
+            $table->foreignId('ruta_id')->constrained('rutas');
+
+            // FK hacia Users (Aquí está la magia de tu segundo diagrama)
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+
+            $table->timestamps();
+        });
+
+        Schema::create('accionables', function (Blueprint $table) {
+            $table->id();
+            $table->string('texto', 100);
+            $table->boolean('hecho')->default(false); // tinyint(1)
+
+            // FK hacia Metas
+            $table->foreignId('meta_id')->constrained('metas')->onDelete('cascade');
+
+            $table->timestamps();
+        });
     }
 
     /**

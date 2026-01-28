@@ -8,19 +8,23 @@ export const Rutas = [
                 id: 0,
                 titulo: "Sostengo y promuevo hábitos de higiene y alimentación saludables.",
                 accionables: [
-                    "Como solo una fritura a la semana.",
-                    "Disfruto y participo de las actividades recreativas, lúdicas, físicas y deportivas, buscando mi bienestar integral."
-                ],
-                progreso: 0
+                    {
+                        texto: "Como solo una fritura a la semana.", 
+                        hecho: true 
+                    },
+                    { 
+                        texto: "Disfruto y participo de las actividades recreativas, lúdicas, físicas y deportivas, buscando mi bienestar integral.", 
+                        hecho: false 
+                    }
+                ]
             },
             {
                 id: 1,
                 titulo: "Sostengo y promuevo hábitos de higiene y alimentación saludables.",
                 accionables: [
-                    "Como solo una fritura a la semana.",
-                    "Disfruto y participo de las actividades recreativas, lúdicas, físicas y deportivas, buscando mi bienestar integral."
-                ],
-                progreso: 0
+                    { texto: "Como solo una fritura a la semana.", hecho: false },
+                    { texto: "Disfruto y participo de las actividades recreativas, lúdicas, físicas y deportivas, buscando mi bienestar integral.", hecho: false }
+                ]
             }
         ]
     },
@@ -33,10 +37,9 @@ export const Rutas = [
                 id: 2,
                 titulo: "Sostengo y promuevo hábitos de higiene y alimentación saludables.",
                 accionables: [
-                    "Como solo una fritura a la semana.",
-                    "Disfruto y participo de las actividades recreativas, lúdicas, físicas y deportivas, buscando mi bienestar integral."
-                ],
-                progreso: 0
+                    { texto: "Como solo una fritura a la semana.", hecho: false },
+                    { texto: "Disfruto y participo de las actividades recreativas, lúdicas, físicas y deportivas, buscando mi bienestar integral.", hecho: false }
+                ]
             }
         ]
     },
@@ -49,10 +52,9 @@ export const Rutas = [
                 id: 3,
                 titulo: "Sostengo y promuevo hábitos de higiene y alimentación saludables.",
                 accionables: [
-                    "Como solo una fritura a la semana.",
-                    "Disfruto y participo de las actividades recreativas, lúdicas, físicas y deportivas, buscando mi bienestar integral."
-                ],
-                progreso: 0
+                    { texto: "Como solo una fritura a la semana.", hecho: false },
+                    { texto: "Disfruto y participo de las actividades recreativas, lúdicas, físicas y deportivas, buscando mi bienestar integral.", hecho: false }
+                ]
             }
         ]
     },
@@ -65,10 +67,9 @@ export const Rutas = [
                 id: 4,
                 titulo: "Sostengo y promuevo hábitos de higiene y alimentación saludables.",
                 accionables: [
-                    "Como solo una fritura a la semana.",
-                    "Disfruto y participo de las actividades recreativas, lúdicas, físicas y deportivas, buscando mi bienestar integral."
-                ],
-                progreso: 0
+                    { texto: "Como solo una fritura a la semana.", hecho: false },
+                    { texto: "Disfruto y participo de las actividades recreativas, lúdicas, físicas y deportivas, buscando mi bienestar integral.", hecho: false }
+                ]
             }
         ]
     },
@@ -81,10 +82,9 @@ export const Rutas = [
                 id: 5,
                 titulo: "Sostengo y promuevo hábitos de higiene y alimentación saludables.",
                 accionables: [
-                    "Como solo una fritura a la semana.",
-                    "Disfruto y participo de las actividades recreativas, lúdicas, físicas y deportivas, buscando mi bienestar integral."
-                ],
-                progreso: 0
+                    { texto: "Como solo una fritura a la semana.", hecho: false },
+                    { texto: "Disfruto y participo de las actividades recreativas, lúdicas, físicas y deportivas, buscando mi bienestar integral.", hecho: false }
+                ]
             }
         ]
     },
@@ -97,10 +97,9 @@ export const Rutas = [
                 id: 6,
                 titulo: "Sostengo y promuevo hábitos de higiene y alimentación saludables.",
                 accionables: [
-                    "Como solo una fritura a la semana.",
-                    "Disfruto y participo de las actividades recreativas, lúdicas, físicas y deportivas, buscando mi bienestar integral."
-                ],
-                progreso: 0
+                    { texto: "Como solo una fritura a la semana.", hecho: false },
+                    { texto: "Disfruto y participo de las actividades recreativas, lúdicas, físicas y deportivas, buscando mi bienestar integral.", hecho: false }
+                ]
             }
         ]
     }

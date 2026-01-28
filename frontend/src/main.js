@@ -2,6 +2,7 @@ import { createApp } from 'vue';
 import { createPinia } from 'pinia';
 import App from '@/App.vue';
 import { router } from './router';
+import { useAuthStore } from '@/stores/auth';
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap-icons/font/bootstrap-icons.css'
@@ -24,6 +25,11 @@ window.addEventListener('unhandledrejection', (ev) => {
   }));
 });
 
-app.use(createPinia());
+const pinia = createPinia();
+app.use(pinia);
 app.use(router);
+
+// Inicializar auth desde localStorage (si existe token)
+const auth = useAuthStore(pinia);
+auth.initFromStorage();
 app.mount('#app');

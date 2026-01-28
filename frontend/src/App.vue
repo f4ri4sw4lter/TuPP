@@ -2,7 +2,7 @@
 <template>
   <div class="min-h-screen" :style="{ backgroundColor: '#F3F6FB' }">
 
-    <main class="p-6 mx-5">
+    <main class="p-6 mx-1">
       <router-view/>
     </main>
 
