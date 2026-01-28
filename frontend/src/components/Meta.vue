@@ -1,8 +1,19 @@
 <template>
     <div class="card p-3">
-        <p class="meta-titulo" @click="mostrarAccionables = !mostrarAccionables">
-            {{ props.meta.titulo }}
-        </p>
+        <div>
+            <template v-if="!editing">
+                <p class="meta-titulo" @click="mostrarAccionables = !mostrarAccionables">
+                    {{ props.meta.titulo }}
+                </p>
+            </template>
+            <template v-else>
+                <div class="d-flex gap-2 align-items-center">
+                    <input ref="editInput" v-model="editTitle" class="form-control" />
+                    <button class="btn btn-sm btn-success" @click="guardarEdicion">Guardar</button>
+                    <button class="btn btn-sm btn-danger" @click="cancelarEdicion">Cancelar</button>
+                </div>
+            </template>
+        </div>
 
         <div class="progress mb-1 w-100">
             <div class="progress-bar bg-success" role="progressbar" :style="{ width: porcentajeProgreso + '%' }"
@@ -16,7 +27,18 @@
                     @update:hecho="(val) => toggleAccionable(accionable, val)" />
                 <div class="botones-meta">
                     <NuevoAccionable :id="props.meta.id" />
-                    <button class="btn btn-primary" @click="editarMeta"><span>editar meta</span></button>
+                       <button class="btn btn-primary" @click="startEdicion">
+                            <span>
+                                <i class="bi bi-pencil-fill"></i>
+                                editar meta
+                            </span>
+                        </button>
+                       <button class="btn btn-danger" @click="confirmarBorrado">
+                            <span>
+                                <i class="bi bi-trash-fill"></i>
+                                borrar meta
+                            </span>
+                        </button>
                 </div>
             </div>
         </transition>
@@ -24,11 +46,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, nextTick } from 'vue'
 import { useAccionablesStore } from '@/stores/accionables';
 import Accionable from './Accionable.vue';
 import { vLongPress } from '../directives/vLongPress';
 import NuevoAccionable from './NuevoAccionable.vue';
+import { useMetasStore } from '@/stores/metas';
 
 const props = defineProps<{ meta: any }>();
 const mostrarAccionables = ref(false)
@@ -56,9 +79,49 @@ const toggleAccionable = async (accionable: any, value: boolean) => {
     }
 };
 
-const editarMeta = () => {
-    // placeholder: implementar edición de meta si es necesario
-    console.log('editar meta');
+// Edición inline del título de la meta
+const editing = ref(false);
+const editTitle = ref(props.meta.titulo);
+const editInput = ref<HTMLInputElement | null>(null);
+
+const startEdicion = async () => {
+    editTitle.value = props.meta.titulo;
+    editing.value = true;
+    await nextTick();
+    if (editInput.value) editInput.value.focus();
+};
+
+const guardarEdicion = async () => {
+    const nuevoTitulo = (editTitle.value || '').trim();
+    if (!nuevoTitulo) {
+        alert('El título no puede estar vacío');
+        return;
+    }
+    try {
+        const metas = useMetasStore();
+        await metas.updateMeta(props.meta.id, { titulo: nuevoTitulo });
+        editing.value = false;
+    } catch (e) {
+        console.error('Error guardando meta', e);
+        alert('No se pudo guardar la meta. Revisa la consola.');
+    }
+};
+
+const cancelarEdicion = () => {
+    editTitle.value = props.meta.titulo;
+    editing.value = false;
+};
+
+const confirmarBorrado = async () => {
+    const ok = confirm('¿Seguro que quieres borrar esta meta? Esta acción no se puede deshacer.');
+    if (!ok) return;
+    try {
+        const metas = useMetasStore();
+        await metas.deleteMeta(props.meta.id);
+    } catch (e) {
+        console.error('Error borrando meta', e);
+        alert('No se pudo borrar la meta. Revisa la consola.');
+    }
 };
 
 </script>

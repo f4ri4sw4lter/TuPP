@@ -1,5 +1,10 @@
 <template>
-    <button class="btn btn-success" @click="mostrarAgregarAccionable = !mostrarAgregarAccionable" v-show="!mostrarAgregarAccionable"><span>agregar accionable</span></button>
+    <button class="btn btn-success" @click="mostrarAgregarAccionable = !mostrarAgregarAccionable" v-show="!mostrarAgregarAccionable">
+        <span>
+            <i class="bi bi-plus-circle-fill"></i>
+            agregar accionable 
+        </span>
+    </button>
 
     <div class="agregar-accionable" v-show="mostrarAgregarAccionable">
         <div class="input-group">
@@ -9,12 +14,22 @@
                 @input="ajustarAltura"
                 class="form-control nuevo-accionable-texto" 
                 name="nuevo-accionable-texto" 
-                rows="1" 
-                placeholder="Nuevo Accionable"
+                rows="4"
+                placeholder="Ej: Disfruto y participo de las actividades recreativas, lúdicas, físicas y deportivas, buscando mi bienestar integral."
             ></textarea>
             <div class="botones">
-                <button class="btn btn-primary" @click="aceptarFormulario"><span>aceptar</span></button>
-                <button class="btn btn-danger" @click="cancelarFormulario"><span>borrar</span></button>
+                <button class="btn btn-success" @click="aceptarFormulario">
+                    <span>
+                        <i class="bi bi-plus-circle-fill"></i>
+                        crear
+                    </span>
+                </button>
+                <button class="btn btn-danger" @click="cancelarFormulario">
+                    <span>
+                        <i class="bi bi-x-circle-fill"></i>
+                        cancelar
+                    </span>
+                </button>
             </div>
         </div>
     </div>

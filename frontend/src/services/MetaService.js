@@ -11,5 +11,7 @@ export default {
     async updateMeta(id, payload) {
         return apiClient.put(`/metas/${id}`, payload);
     },
-    // ... delete, etc.
+    async deleteMeta(id) {
+        return apiClient.delete(`/metas/${id}`);
+    }
 };

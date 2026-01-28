@@ -78,5 +78,31 @@ export const useMetasStore = defineStore('metas', {
             await MetaService.createMeta(nuevaMeta);
             await this.fetchRutasConMetas(); // Recargamos para ver el cambio
         }
+        ,
+        async deleteMeta(id) {
+            this.loading = true;
+            try {
+                await MetaService.deleteMeta(id);
+                await this.fetchRutasConMetas();
+            } catch (err) {
+                this.error = err.response?.data?.message || err.message || 'Error eliminando meta';
+                throw err;
+            } finally {
+                this.loading = false;
+            }
+        }
+        ,
+        async updateMeta(id, payload) {
+            this.loading = true;
+            try {
+                await MetaService.updateMeta(id, payload);
+                await this.fetchRutasConMetas();
+            } catch (err) {
+                this.error = err.response?.data?.message || err.message || 'Error actualizando meta';
+                throw err;
+            } finally {
+                this.loading = false;
+            }
+        }
     }
 });

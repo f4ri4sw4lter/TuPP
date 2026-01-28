@@ -1,5 +1,5 @@
 <template>
-    <div class="btn-agregar-meta" @click="mostrarFormulario = !mostrarFormulario" v-show="!mostrarFormulario">Agregar nueva meta</div>
+    <div class="btn-agregar-meta" @click="mostrarFormulario = !mostrarFormulario" v-show="!mostrarFormulario"><i class="bi bi-plus-circle-fill"></i> agregar nueva meta</div>
 
     <div class="agregar-meta" v-show="mostrarFormulario">
         <div class="input-group">
@@ -9,12 +9,22 @@
                 @input="ajustarAltura"
                 class="form-control nueva-meta-nombre" 
                 name="nueva-meta-nombre" 
-                rows="1" 
-                placeholder="Nueva Meta"
+                rows="2" 
+                placeholder="Ej: Sostengo y promuevo hábitos de higiene y alimentación saludables."
             ></textarea>
             <div class="botones">
-                <button class="btn btn-primary" @click="aceptarFormulario"><span>aceptar</span></button>
-                <button class="btn btn-danger" @click="cancelarFormulario"><span>borrar</span></button>
+                <button class="btn btn-success" @click="aceptarFormulario">
+                    <span>
+                        <i class="bi bi-plus-circle-fill"></i>
+                        crear
+                    </span>
+                </button>
+                <button class="btn btn-danger" @click="cancelarFormulario">
+                    <span>
+                        <i class="bi bi-x-circle-fill"></i>
+                        cancelar
+                    </span>
+                </button>
             </div>
         </div>
     </div>

@@ -3,9 +3,9 @@
     <div class="card shadow-sm border-0 rounded-4">
       <div class="card-body p-4">
         
-        <h4 class="text-center mb-4 fw-bold text-secondary">Iniciar Sesión</h4>
+  <h4 class="text-center mb-4 fw-bold text-secondary">{{ registerMode ? 'Crear cuenta' : 'Iniciar Sesión' }}</h4>
 
-        <form @submit.prevent="handleLogin">
+  <form @submit.prevent="registerMode ? handleRegister() : handleLogin()">
           
           <div class="mb-3">
             <label for="email" class="form-label small text-muted">Correo Electrónico</label>
@@ -17,6 +17,19 @@
               placeholder="nombre@ejemplo.com"
               required
               autocomplete="username"
+            >
+          </div>
+
+          <div v-if="registerMode" class="mb-3">
+            <label for="name" class="form-label small text-muted">Nombre</label>
+            <input 
+              type="text" 
+              class="form-control form-control-lg fs-6" 
+              id="name" 
+              v-model="form.name"
+              placeholder="Tu nombre"
+              required
+              autocomplete="name"
             >
           </div>
 
@@ -46,6 +59,19 @@
             </div>
           </div>
 
+          <div v-if="registerMode" class="mb-4">
+            <label for="password_confirmation" class="form-label small text-muted">Confirmar Contraseña</label>
+            <input 
+              :type="mostrarPassword ? 'text' : 'password'" 
+              class="form-control form-control-lg fs-6" 
+              id="password_confirmation" 
+              v-model="form.password_confirmation"
+              placeholder="••••••"
+              required
+              autocomplete="new-password"
+            >
+          </div>
+
           <div v-if="errorMsg" class="alert alert-danger py-2 small" role="alert">
             {{ errorMsg }}
           </div>
@@ -58,13 +84,13 @@
               :style="{ backgroundColor: '#558fc9', borderColor: '#558fc9' }"
             >
               <span v-if="cargando" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-              {{ cargando ? 'Ingresando...' : 'Entrar' }}
+              {{ cargando ? (registerMode ? 'Creando...' : 'Ingresando...') : (registerMode ? 'Crear cuenta' : 'Entrar') }}
             </button>
           </div>
 
           <div class="text-center mt-3">
-            <a href="#" class="text-decoration-none small text-muted">
-              ¿Olvidaste tu contraseña?
+            <a href="#" class="text-decoration-none small text-muted" @click.prevent="toggleMode">
+              {{ registerMode ? '¿Ya tienes cuenta? Inicia sesión' : 'Crear una cuenta' }}
             </a>
           </div>
 
@@ -84,14 +110,17 @@ const emit = defineEmits(['on-login']);
 
 // Estado del formulario
 const form = reactive({
+  name: '',
   email: '',
-  password: ''
+  password: '',
+  password_confirmation: ''
 });
 
 // Estados de UI
 const mostrarPassword = ref(false);
 const cargando = ref(false);
 const errorMsg = ref('');
+const registerMode = ref(false);
 
 const router = useRouter();
 const auth = useAuthStore();
@@ -120,6 +149,44 @@ const handleLogin = async () => {
   } finally {
     cargando.value = false;
   }
+};
+
+const handleRegister = async () => {
+  // Reiniciar estados
+  errorMsg.value = '';
+  cargando.value = true;
+
+  try {
+    if (form.password !== form.password_confirmation) {
+      errorMsg.value = 'Las contraseñas no coinciden';
+      return;
+    }
+
+    await auth.register({
+      name: form.name,
+      email: form.email,
+      password: form.password,
+      password_confirmation: form.password_confirmation
+    });
+
+    // Emitimos al padre por compatibilidad y redirigimos al home
+    emit('on-login');
+    await router.push('/');
+  } catch (error: any) {
+    errorMsg.value = auth.error || error.response?.data?.message || error.message || 'Error al registrar';
+  } finally {
+    cargando.value = false;
+  }
+};
+
+const toggleMode = () => {
+  registerMode.value = !registerMode.value;
+  errorMsg.value = '';
+  // limpiar datos del formulario cuando cambiamos de modo
+  form.name = '';
+  form.email = '';
+  form.password = '';
+  form.password_confirmation = '';
 };
 </script>
 
