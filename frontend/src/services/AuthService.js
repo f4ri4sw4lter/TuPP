@@ -41,6 +41,16 @@ export default {
         return apiClient.get('/auth/me');
     },
 
+    async forgot(payload) {
+        // payload: { email }
+        return apiClient.post('/auth/forgot', payload);
+    },
+
+    async reset(payload) {
+        // payload: { email, token, password, password_confirmation }
+        return apiClient.post('/auth/reset', payload);
+    },
+
     getToken() {
         return localStorage.getItem('tupp_token');
     },

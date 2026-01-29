@@ -2,35 +2,21 @@
   <div class="col-12 col-md-6 col-lg-4 mx-auto">
     <div class="card shadow-sm border-0 rounded-4">
       <div class="card-body p-4">
-        
-  <h4 class="text-center mb-4 fw-bold text-secondary">{{ registerMode ? 'Crear cuenta' : 'Iniciar Sesión' }}</h4>
 
-  <form @submit.prevent="registerMode ? handleRegister() : handleLogin()">
-          
+        <h4 class="text-center mb-4 fw-bold text-secondary">{{ registerMode ? 'Crear cuenta' : 'Iniciar Sesión' }}</h4>
+
+        <form @submit.prevent="registerMode ? handleRegister() : handleLogin()">
+
           <div class="mb-3">
             <label for="email" class="form-label small text-muted">Correo Electrónico</label>
-            <input 
-              type="email" 
-              class="form-control form-control-lg fs-6" 
-              id="email" 
-              v-model="form.email"
-              placeholder="nombre@ejemplo.com"
-              required
-              autocomplete="username"
-            >
+            <input type="email" class="form-control form-control-lg fs-6" id="email" v-model="form.email"
+              placeholder="nombre@ejemplo.com" required autocomplete="username">
           </div>
 
           <div v-if="registerMode" class="mb-3">
             <label for="name" class="form-label small text-muted">Nombre</label>
-            <input 
-              type="text" 
-              class="form-control form-control-lg fs-6" 
-              id="name" 
-              v-model="form.name"
-              placeholder="Tu nombre"
-              required
-              autocomplete="name"
-            >
+            <input type="text" class="form-control form-control-lg fs-6" id="name" v-model="form.name"
+              placeholder="Tu nombre" required autocomplete="name">
           </div>
 
           <div class="mb-4">
@@ -38,38 +24,21 @@
               <label for="password" class="form-label small text-muted">Contraseña</label>
             </div>
             <div class="input-group">
-              <input 
-                :type="mostrarPassword ? 'text' : 'password'" 
-                class="form-control form-control-lg fs-6" 
-                id="password" 
-                v-model="form.password"
-                placeholder="••••••"
-                required
-                autocomplete="current-password"
-              >
-              <button 
-                class="btn btn-outline-secondary" 
-                type="button" 
-                @click="mostrarPassword = !mostrarPassword"
-                style="border-color: #ced4da;"
-              >
+              <input :type="mostrarPassword ? 'text' : 'password'" class="form-control form-control-lg fs-6"
+                id="password" v-model="form.password" placeholder="••••••" required autocomplete="current-password">
+              <button class="btn btn-outline-secondary" type="button" @click="mostrarPassword = !mostrarPassword"
+                style="border-color: #ced4da;">
                 <i :class="mostrarPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
-                {{ mostrarPassword ? '🙈' : '👁️' }} 
+                {{ mostrarPassword ? '🙈' : '👁️' }}
               </button>
             </div>
           </div>
 
           <div v-if="registerMode" class="mb-4">
             <label for="password_confirmation" class="form-label small text-muted">Confirmar Contraseña</label>
-            <input 
-              :type="mostrarPassword ? 'text' : 'password'" 
-              class="form-control form-control-lg fs-6" 
-              id="password_confirmation" 
-              v-model="form.password_confirmation"
-              placeholder="••••••"
-              required
-              autocomplete="new-password"
-            >
+            <input :type="mostrarPassword ? 'text' : 'password'" class="form-control form-control-lg fs-6"
+              id="password_confirmation" v-model="form.password_confirmation" placeholder="••••••" required
+              autocomplete="new-password">
           </div>
 
           <div v-if="errorMsg" class="alert alert-danger py-2 small" role="alert">
@@ -77,14 +46,12 @@
           </div>
 
           <div class="d-grid gap-2">
-            <button 
-              type="submit" 
-              class="btn btn-primary btn-lg text-white fw-bold"
-              :disabled="cargando"
-              :style="{ backgroundColor: '#558fc9', borderColor: '#558fc9' }"
-            >
-              <span v-if="cargando" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-              {{ cargando ? (registerMode ? 'Creando...' : 'Ingresando...') : (registerMode ? 'Crear cuenta' : 'Entrar') }}
+            <button type="submit" class="btn btn-primary btn-lg text-white fw-bold" :disabled="cargando"
+              :style="{ backgroundColor: '#558fc9', borderColor: '#558fc9' }">
+              <span v-if="cargando" class="spinner-border spinner-border-sm me-2" role="status"
+                aria-hidden="true"></span>
+              {{ cargando ? (registerMode ? 'Creando...' : 'Ingresando...') : (registerMode ? 'Crear cuenta' : 'Entrar')
+              }}
             </button>
           </div>
 
@@ -94,7 +61,25 @@
             </a>
           </div>
 
+          <div class="text-center mt-2">
+            <a href="#" class="text-decoration-none small text-muted" @click.prevent="startRecover">
+              Recuperar contraseña
+            </a>
+          </div>
         </form>
+        
+        <div v-if="recoverMode" class="mt-3 card p-3">
+          <h6>Solicitar recuperación</h6>
+          <div class="mb-2">
+            <input class="form-control" type="email" v-model="recoverEmail" placeholder="Tu correo" />
+          </div>
+          <div class="d-grid">
+            <button class="btn btn-outline-primary" @click="submitRecoverRequest">Enviar instrucciones</button>
+          </div>
+          <div v-if="recoverError" class="mt-2 small text-danger">{{ recoverError }}</div>
+        </div>
+
+        <div v-if="recoverMsg" class="mt-3 alert alert-success small">{{ recoverMsg }}</div>
       </div>
     </div>
   </div>
@@ -104,6 +89,7 @@
 import { ref, reactive } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '../stores/auth';
+import AuthService from '../services/AuthService';
 
 // Definimos los eventos que este componente puede emitir hacia el padre (Home)
 const emit = defineEmits(['on-login']);
@@ -188,17 +174,45 @@ const toggleMode = () => {
   form.password = '';
   form.password_confirmation = '';
 };
+
+// Password recovery state
+const recoverMode = ref(false);
+const recoverEmail = ref('');
+const recoverMsg = ref('');
+const recoverError = ref('');
+
+const startRecover = () => {
+  recoverMode.value = !recoverMode.value;
+  recoverEmail.value = form.email || '';
+  recoverMsg.value = '';
+  recoverError.value = '';
+};
+
+const submitRecoverRequest = async () => {
+  recoverMsg.value = '';
+  recoverError.value = '';
+  try {
+    const res = await AuthService.forgot({ email: recoverEmail.value });
+    recoverMsg.value = res.data?.message || 'Revisa tu correo para instrucciones';
+    // Close the recovery UI and finish the flow here — user must check their inbox.
+    recoverMode.value = false;
+  } catch (e: any) {
+    recoverError.value = e.response?.data?.message || e.message || 'Error solicitando recuperación';
+  }
+};
 </script>
 
 <style scoped>
 /* Estilos específicos para sentirlo más "App nativa" */
 .card {
   /* Sombra suave */
-  box-shadow: 0 4px 24px rgba(0,0,0,0.06) !important; 
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06) !important;
 }
 
 /* Ajuste para que los inputs no hagan zoom en iPhone al hacer focus */
-input, select, textarea {
-  font-size: 16px !important; 
+input,
+select,
+textarea {
+  font-size: 16px !important;
 }
 </style>

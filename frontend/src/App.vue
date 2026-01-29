@@ -6,7 +6,7 @@
       <router-view/>
     </main>
 
-    <footer class="bg-gray-200 text-gray-700 p-4 text-center">
+    <footer class="bg-gray-200 text-gray-700 p-0 text-center fs-6 absolute w-full">
       &copy; 2026 Aplicación de progresión personal
     </footer>
   </div>
