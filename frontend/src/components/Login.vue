@@ -74,6 +74,13 @@
                 <div class="text-center mt-3" v-if="pwa.canInstall && !pwa.isInstalled">
                   <button class="btn btn-success" @click="installPWA">Instalar app</button>
                 </div>
+
+                <div class="text-center mt-2" v-if="installMsg">
+                  <div class="alert alert-success small">{{ installMsg }}</div>
+                </div>
+                <div class="text-center mt-2" v-if="installError">
+                  <div class="alert alert-danger small">{{ installError }}</div>
+                </div>
         </form>
 
         <div v-if="recoverMode" class="mt-3 card p-3">
@@ -91,6 +98,7 @@
       </div>
     </div>
   </div>
+  <IosInstallModal />
 </template>
 
 <script setup lang="ts">
@@ -99,6 +107,7 @@ import { useRouter } from 'vue-router';
 import { useAuthStore } from '../stores/auth';
 import AuthService from '../services/AuthService';
 import { usePwaStore } from '../stores/pwa';
+import IosInstallModal from './IosInstallModal.vue';
 
 // Definimos los eventos que este componente puede emitir hacia el padre (Home)
 const emit = defineEmits(['on-login']);
@@ -120,6 +129,8 @@ const registerMode = ref(false);
 const router = useRouter();
 const auth = useAuthStore();
 const pwa = usePwaStore();
+const installMsg = ref('');
+const installError = ref('');
 
 // Inicializar store si viene de localStorage (en runtime ya se inicializa en main.js,
 // pero llamarlo aquí es seguro para tests o storybook)
@@ -214,13 +225,22 @@ const submitRecoverRequest = async () => {
 // PWA install action
 const installPWA = async () => {
   try {
+    installMsg.value = '';
+    installError.value = '';
     const res = await pwa.promptInstall();
-    // res may have .outcome === 'accepted' or 'dismissed'
     if (res && res.outcome === 'accepted') {
-      // hide button — store already updated
+      installMsg.value = 'Instalación aceptada. Gracias!';
+    } else if (res && res.outcome === 'dismissed') {
+      installError.value = 'Instalación cancelada.';
+    } else if (res && res.outcome === 'error') {
+      installError.value = 'Error al solicitar la instalación.';
+    } else {
+      // unknown outcome
+      installError.value = 'Resultado desconocido de la instalación.';
     }
   } catch (e) {
-    // ignore errors — prompt may be unavailable or rejected
+    // hande errors safely in TS
+    installError.value = (e as any)?.message || String(e) || 'Error al solicitar la instalación';
   }
 };
 </script>

@@ -44,14 +44,28 @@ services:
       context: ./frontend
       dockerfile: ../docker_stack/vue/Dockerfile
     container_name: tupp_vue3
+    # Expose the dev server port. You can change the host port if needed
     ports:
-      - 5173:5173
+      - "5173:5173"
     volumes:
       - ./frontend:/app
+      # keep node_modules inside the container to avoid host/container binary mismatches
+      - /app/node_modules
     environment:
       - NODE_ENV=development
-      - VITE_API_BASE_URL=http://localhost:8081
-    command: ["sh", "-c", "npm install && npm run dev -- --host 0.0.0.0 --port 5173"]
+      # API base used by the frontend during development (points to nginx service)
+      - VITE_API_BASE_URL=http://tupp_server_nginx
+      # Vite dev server port inside the container (and default public port)
+      - VITE_DEV_PORT=5173
+      # IMPORTANT: set HOST_IP in your environment to the host machine IP visible on the LAN
+      # Example: HOST_IP=192.168.1.42
+      - VITE_HMR_HOST=${HOST_IP}
+      # The public port on the host that the browser will connect to for HMR ws (default 5173)
+      - VITE_HMR_PORT=${HOST_PORT:-5173}
+      # protocol for HMR websocket (ws or wss)
+      - VITE_HMR_PROTOCOL=ws
+    # Install deps and start vite on 0.0.0.0 so other devices can reach it
+    command: ["sh", "-c", "npm ci && npm run dev -- --host 0.0.0.0 --port 5173"]
     depends_on:
       - tupp_php_82
     networks:

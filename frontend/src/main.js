@@ -75,7 +75,9 @@ window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
   // store the event in the pwa store so UI can trigger it
   try {
+    console.debug('[PWA] beforeinstallprompt captured');
     pwa.setDeferredPrompt(e);
+    console.debug('[PWA] deferredPrompt saved to store');
   } catch (err) {
     // ignore if store not available for some reason
   }
@@ -83,19 +85,28 @@ window.addEventListener('beforeinstallprompt', (e) => {
 
 // When the app is installed, update the store so the install button can hide
 window.addEventListener('appinstalled', () => {
+  console.debug('[PWA] appinstalled event fired');
   try { pwa.setInstalled(true); } catch (e) {}
   try { pwa.clearDeferredPrompt(); } catch (e) {}
 });
 
 // iOS: advise user how to add to home screen (Safari doesn't fire beforeinstallprompt)
 if (/iphone|ipad|ipod/i.test(window.navigator.userAgent)) {
-  // show a subtle hint once per session
+  // show an iOS install hint once per session using the PWA store (modal)
   if (!sessionStorage.getItem('ios-pwa-hint')) {
     sessionStorage.setItem('ios-pwa-hint', '1');
-    setTimeout(() => {
-      // show a gentle instruction — you can replace this with a nicer modal
-      alert('Para instalar la app en iOS: pulse el botón Compartir y luego "Agregar a pantalla de inicio".');
-    }, 1500);
+    // respect a user dismissal persisted in localStorage
+    if (!localStorage.getItem('ios-pwa-hint-dismissed')) {
+      try {
+        // ask the pwa store to show an iOS hint modal instead of alert
+        pwa.setIosHint(true);
+      } catch (e) {
+        // fallback to alert if store is unavailable
+        setTimeout(() => {
+          alert('Para instalar la app en iOS: pulse el botón Compartir y luego "Agregar a pantalla de inicio".');
+        }, 1500);
+      }
+    }
   }
 }
 

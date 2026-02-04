@@ -6,6 +6,8 @@ export const usePwaStore = defineStore('pwa', {
     deferredPrompt: null,
     // Whether the app is considered installed
     isInstalled: false,
+    // Whether we should show an iOS install hint modal
+    iosHintVisible: false,
   }),
   getters: {
     // Whether we can show an install button (native prompt available)
@@ -21,6 +23,12 @@ export const usePwaStore = defineStore('pwa', {
     setInstalled(flag = true) {
       this.isInstalled = flag;
       if (flag) this.clearDeferredPrompt();
+    },
+    setIosHint(flag = true) {
+      this.iosHintVisible = !!flag;
+    },
+    clearIosHint() {
+      this.iosHintVisible = false;
     },
     async promptInstall() {
       if (!this.deferredPrompt) return { outcome: 'unavailable' };
