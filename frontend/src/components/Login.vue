@@ -1,5 +1,8 @@
 <template>
   <div class="col-12 col-md-6 col-lg-4 mx-auto">
+    <div class="d-flex justify-content-center" :style="{ height: '50px', marginTop: '0.5rem', marginBottom: '0.5rem' }">
+      <img src="../assets/images/logo.png" :style="{ borderRadius: '50%', border: '1px solid #558fc9' }">
+    </div>
     <div class="card shadow-sm border-0 rounded-4">
       <div class="card-body p-4">
 
@@ -66,8 +69,13 @@
               Recuperar contraseña
             </a>
           </div>
-        </form>
         
+                <!-- PWA install button: visible only when install prompt available and app not installed -->
+                <div class="text-center mt-3" v-if="pwa.canInstall && !pwa.isInstalled">
+                  <button class="btn btn-success" @click="installPWA">Instalar app</button>
+                </div>
+        </form>
+
         <div v-if="recoverMode" class="mt-3 card p-3">
           <h6>Solicitar recuperación</h6>
           <div class="mb-2">
@@ -90,6 +98,7 @@ import { ref, reactive } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '../stores/auth';
 import AuthService from '../services/AuthService';
+import { usePwaStore } from '../stores/pwa';
 
 // Definimos los eventos que este componente puede emitir hacia el padre (Home)
 const emit = defineEmits(['on-login']);
@@ -110,6 +119,7 @@ const registerMode = ref(false);
 
 const router = useRouter();
 const auth = useAuthStore();
+const pwa = usePwaStore();
 
 // Inicializar store si viene de localStorage (en runtime ya se inicializa en main.js,
 // pero llamarlo aquí es seguro para tests o storybook)
@@ -198,6 +208,19 @@ const submitRecoverRequest = async () => {
     recoverMode.value = false;
   } catch (e: any) {
     recoverError.value = e.response?.data?.message || e.message || 'Error solicitando recuperación';
+  }
+};
+
+// PWA install action
+const installPWA = async () => {
+  try {
+    const res = await pwa.promptInstall();
+    // res may have .outcome === 'accepted' or 'dismissed'
+    if (res && res.outcome === 'accepted') {
+      // hide button — store already updated
+    }
+  } catch (e) {
+    // ignore errors — prompt may be unavailable or rejected
   }
 };
 </script>

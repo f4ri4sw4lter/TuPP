@@ -1,14 +1,11 @@
 <template>
     <div class="container">
-        <div class="d-flex justify-content-center" :style="{height: '50px', marginTop: '0.5rem', marginBottom: '0.5rem'}">
-            <img src="../assets/images/logo.png" :style="{ borderRadius: '50%', border: '1px solid #558fc9' }">
-        </div>
     
         <div class="row g-4 width-100" v-if="!estaLogueado">
             <Login @on-login="estaLogueado = true" />
         </div>
 
-        <div class="row g-4 width-100" v-else>
+        <div class="row g-4 width-100 p-1" v-else>
             <Ruta  
                 v-for="ruta in listaRutas" 
                 :key="ruta.id" 
@@ -16,7 +13,7 @@
             />
             
             <div class="col-12 text-center mt-3">
-                <button class="btn btn-danger btn-sm" @click="cerrarSesion">Cerrar Sesi&oacute;n</button>
+                <button class="btn-logout" @click="cerrarSesion">Cerrar Sesi&oacute;n</button>
             </div>
         </div>
 
@@ -63,3 +60,15 @@ const cerrarSesion = async () => {
     metasStore.rutas = datosIniciales;
 };
 </script>
+
+<style scoped>  
+.btn-logout {
+  background: transparent;
+  border: 2px solid #d32f2f;
+  color: #d32f2f;
+  padding: 8px 16px;
+  border-radius: 12px; /* Ajusta según tus otros botones */
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+</style>
