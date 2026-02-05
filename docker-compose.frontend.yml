@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  tupp_frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prod
+    image: tupp_frontend:latest
+    container_name: tupp_frontend
+    ports:
+      - "80:80"
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production

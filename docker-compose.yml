@@ -11,6 +11,8 @@ services:
       - 8081:80
     volumes:
       - ./backend:/var/www/html
+      - ./frontend/dist:/var/www/html/frontend_dist  # <--- ESTO ES LA CLAVE
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
     networks:
       - tupp_network
   tupp_php_82:
