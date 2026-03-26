@@ -8,38 +8,57 @@ import {
   TextInput,
   Pressable,
 } from "react-native";
+import AntDesign from "@expo/vector-icons/AntDesign";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
-export default function AgregarAccionable({}) {
+export default function AgregarAccionable({ onConfirmar }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [text, onChangeText] = useState("");
 
-  useEffect(() => {}, []);
+  const handleAceptar = () => {
+    if (text.trim().length > 0) {
+      onConfirmar(text.trim());
+      onChangeText("");
+      setModalVisible(false);
+    }
+  };
 
   return (
     <View>
       <Pressable
-        style={styles.btnAgregarAccionable}
+        style={({ pressed }) => [
+          styles.btnAgregarAccionable,
+          {
+            opacity: pressed ? 0.5 : 1,
+            transform: [{ scale: pressed ? 0.96 : 1 }],
+          },
+        ]}
         onPress={() => setModalVisible(true)}
       >
-        <Text style={styles.textStyle}>+</Text>
+        <Text style={styles.textStyle}>
+          <MaterialIcons name="add-circle-outline" size={20} color="white" />
+        </Text>
       </Pressable>
+
       <Modal
         animationType="slide"
         transparent={true}
         visible={modalVisible}
-        onRequestClose={() => {
-          setModalVisible(!modalVisible);
-        }}
+        onRequestClose={() => setModalVisible(false)}
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <Text style={styles.modalText}>Agregar accionable</Text>
+            <Text style={styles.modalText}>
+              <AntDesign name="form" size={16} color="black" /> Agregar
+              accionable
+            </Text>
 
             <TextInput
               style={styles.input}
               onChangeText={onChangeText}
               value={text}
               placeholder="..."
+              autoFocus={true}
             />
 
             <View style={styles.botoneraModal}>
@@ -48,7 +67,7 @@ export default function AgregarAccionable({}) {
                   styles.btnModal,
                   { backgroundColor: "rgba(54, 109, 192, 1)" },
                 ]}
-                onPress={() => setModalVisible(true)}
+                onPress={handleAceptar}
               >
                 <Text style={styles.textStyle}>Aceptar</Text>
               </Pressable>
@@ -58,7 +77,10 @@ export default function AgregarAccionable({}) {
                   styles.btnModal,
                   { backgroundColor: "rgba(192, 54, 54, 1)" },
                 ]}
-                onPress={() => setModalVisible(false)}
+                onPress={() => {
+                  setModalVisible(false);
+                  onChangeText("");
+                }}
               >
                 <Text style={styles.textStyle}>Cancelar</Text>
               </Pressable>
@@ -139,5 +161,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     paddingHorizontal: 10,
     width: "100%",
-  }
+    minWidth: 300,
+    maxWidth: "100%",
+  },
 });

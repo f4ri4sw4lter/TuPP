@@ -1,0 +1,69 @@
+{
+    "1" : {
+        "descripcion" : "El cuidado propio y de los demas desde una perspectiva integral (biopsicosocial) en un ambiente sano y equilibrado.",
+        "competencias" : [
+            "Sostengo y promuevo hábitos de higiene y alimentación saludables.",
+            "Disfruto y participo de las actividades recreativas, lúdicas, físicas y deportivas, buscando de mi bienestar integral.",
+            "Organizo y administro el tiempo y los recursos disponibles para alcanzar mis metas.",
+            "Disfruto de las oportunidades y experiencias que brinda la vida en la naturaleza.",
+            "Evaluo situaciones y busco evitar conductas que me expongan a peligros a mi o a otras personas."
+        ]
+    },
+    "2" : {        
+        "descripcion" : "Desarrollo del pensamiento crítico, la capacidad de búsqueda, selección y validación de la información. La exploración y definición de la vocación.",
+        "competencias" : [
+            "Exploro mis intereses vocacionales, descubro mis posibilidades y elijo en consecuencia.",
+            "Aplico técnicas y tecnologías de la información disponibles en la vida cotidiana.",
+            "Busco y evalúo el valor de diversas fuentes de información (académicas, científicas, artísticas, populares, empíricas, ancestrales, etc.) y las aplico de manera crítica y creativa en función de la necesidad y los contextos.",
+            "Me posiciono crítica y responsablemente ante los mensajes que los medios de comunicación y redes sociales instalan sobre el cuerpo humano y sus estereotipos."
+        ]
+    },
+    "3" : {
+        "descripcion" : "Incluir (integrar) a todas las personas sin distinción, en igualdad de oportunidades valorando y promoviendo la heterogeneidad como riqueza fundamental de las comunidades. Madurez emocional. Resolución pacífica del conflicto. Cuestionamiento de los estereotipos.",
+        "competencias" : [
+            "Contribuyo pacíficamente a la resolución de conflictos evitando toda forma de intolerancia y violencia, promoviendo la paz.",
+            "Me comunico de manera asertiva y comprensible utilizando diferentes formatos y medios con una mirada inclusiva.",
+            "Me comunico de manera asertiva y comprensible utilizando diferentes formatos y medios con una mirada inclusiva. (Nota: este punto aparece repetido en la imagen original).",
+            "Tomo consciencia de mis emociones y las expreso comprendiendo como impactan en mí y en mi entorno.",
+            "Reconozco, acepto y valoro mi cuerpo y el de los demás en su integralidad.",
+            "Vivo mi sexualidad de manera plena y consciente cuidando mis relaciones sexoafectivas de manera sana y segura.",
+            "Analizo y cuestiono actitudes y estereotipos culturales entendiendo cómo éstas pueden perpetuar la discriminación y exclusión."
+        ]
+    },
+    "4" : {
+        "descripcion" : "Construcción de un proyecto de vida en base a una escala de valores. Resiliencia y superación personal.",
+        "competencias" : [
+            "Me responsabilizo por mi desarrollo personal, esforzándome por superarme constantemente.",
+            "Desarrollo habilidades para el mundo laboral.",
+            "Tomo decisiones económicas (y financieras) que acompañen mi proyecto de vida de manera consciente y responsable.",
+            "Actúo de manera resiliente ante las dificultades, buscando la superación personal y colectiva."
+        ]
+    },
+    "5" : {
+        "descripcion" : "Responsabilidad ambiental y sostenibilidad. Construcción de una ciudadanía democrática. Valoración de la diversidad y la inclusión. Defensa de los derechos humanos. Capacidad de percibir las necesidades sociales involucrándose de forma activa, responsable, comprometida y solidaria ante ellas. Valoración de la identidad.",
+        "competencias" : [
+            "Valoro mi identidad y promuevo la herencia cultural, rescatando los saberes ancestrales de mi comunidad y de mi país.",
+            "Promuevo y defiendo los Derechos Humanos.",
+            "Ejercito plena y responsablemente mis derechos como ciudadano/a en todos los ámbitos de desarrollo con una mirada crítica de la realidad.",
+            "Defiendo y promuevo el respeto a las reglas de la democracia, aportando a su construcción a partir de una mirada crítica de la realidad.",
+            "Miro al mundo desde una perspectiva de derechos, viviendo y promoviendo colectivamente una experiencia integral, igualitaria y segura.",
+            "Valoro la diversidad y promuevo la inclusión en todos los ámbitos en los que me desempeño.",
+            "Me involucro, planifico y desarrollo acciones comunitarias que sean sostenibles y tengan un impacto socioambiental positivo.",
+            "Valoro y promuevo la solidaridad, la empatía y el compromiso social como formas esenciales de vivir junto a las demás personas.",
+            "Indago en las causas y consecuencias de las injusticias, desigualdades y problemáticas sociales, actuando comprometida y coherentemente para la construcción de una sociedad cada vez más justa, equitativa e igualitaria.",
+            "Consumo y produzco de manera sostenible y sustentable.",
+            "Desarrollo acciones de preservación y protección ambiental a partir de una conciencia crítica y responsable de las causas y consecuencias del impacto ambiental.",
+            "Reconozco la interdependencia entre las personas y todas las especies desarrollando el cuidado de la madre tierra.",
+            "Reconozco que la Tierra es nuestra casa común y promuevo la armonía con la naturaleza, a favor de un equilibrio justo entre las necesidades económicas, sociales y ambientales de las generaciones actuales y futuras."
+        ]
+    },
+    "6" : {
+        "descripcion" : "Indagar sobre el sentido espiritual de la vida. Darse la oportunidad de explorar una realidad espiritual, coherencia entre los principios espirituales que sustenta y las acciones en la vida cotidiana, apertura al diálogo y la promoción del entendimiento entre personas de distintas opciones espirituales.",
+        "competencias" : [
+            "Me cuestiono sobre las grandes preguntas que dan sentido a la existencia.",
+            "Promuevo el diálogo y el entendimiento más allá de las creencias personales.",
+            "Asumo un estilo de vida en coherencia con mi creencias y valores.",
+            "Valoro la naturaleza como una oportunidad de conexión conmigo mismo y con lo trascendente."
+        ]
+    }
+}

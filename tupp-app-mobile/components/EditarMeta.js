@@ -7,69 +7,85 @@ import {
   StyleSheet,
   TextInput,
   Pressable,
+  Alert,
 } from "react-native";
+import AntDesign from '@expo/vector-icons/AntDesign';
 
-export default function EditarMeta({ tituloMeta, show }) {
-  const [modalVisible, setModalVisible] = useState(show);
-  const [text, onChangeText] = useState("");
+export default function EditarMeta({
+  tituloMeta,
+  show,
+  onClose,
+  onConfirmar,
+  onEliminar,
+}) {
+  const [text, onChangeText] = useState(tituloMeta);
 
   useEffect(() => {
-    setModalVisible(show);
-  }, [show]);
+    if (show) onChangeText(tituloMeta);
+  }, [show, tituloMeta]);
+
+  const confirmarEliminar = () => {
+    Alert.alert(
+      "Eliminar Meta",
+      `¿Estás seguro de que quieres eliminar "${tituloMeta}"?`,
+      [
+        { text: "Cancelar", style: "cancel" },
+        {
+          text: "Eliminar",
+          style: "destructive",
+          onPress: onEliminar,
+        },
+      ],
+    );
+  };
 
   return (
-    <View>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          setModalVisible(!modalVisible);
-        }}
-      >
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <View style={styles.modalHeader}>
-              <Text style={styles.modalText}>Editar meta</Text>
-              <Pressable
-                style={styles.btnEliminar}
-                onPress={() => setModalVisible(true)}
-              >
-                <Text style={styles.textEliminar}>🗑️</Text>
-              </Pressable>
-            </View>
+    <Modal
+      animationType="fade"
+      transparent={true}
+      visible={show}
+      onRequestClose={onClose}
+    >
+      <View style={styles.centeredView}>
+        <View style={styles.modalView}>
+          <View style={styles.modalHeader}>
+            <Text style={styles.modalLabel}>Editar meta</Text>
+            <Pressable style={styles.btnEliminar} onPress={confirmarEliminar}>
+              <AntDesign name="delete" size={20} color="#ff0000" />
+            </Pressable>
+          </View>
 
-            <TextInput
-              style={styles.input}
-              onChangeText={onChangeText}
-              value={tituloMeta}
-            />
+          <TextInput
+            style={styles.input}
+            onChangeText={onChangeText}
+            value={text}
+            autoFocus={true}
+          />
 
-            <View style={styles.botoneraModal}>
-              <Pressable
-                style={[
-                  styles.btnModal,
-                  { backgroundColor: "rgba(54, 109, 192, 1)" },
-                ]}
-                onPress={() => setModalVisible(true)}
-              >
-                <Text style={styles.textStyle}>Aceptar</Text>
-              </Pressable>
+          <View style={styles.botoneraModal}>
+            <Pressable
+              style={[
+                styles.btnModal,
+                { backgroundColor: "rgba(54, 109, 192, 1)" },
+              ]}
+              onPress={() => onConfirmar(text)}
+            >
+              <Text style={styles.textStyle}>Guardar</Text>
+            </Pressable>
 
-              <Pressable
-                style={[
-                  styles.btnModal,
-                  { backgroundColor: "rgba(192, 54, 54, 1)" },
-                ]}
-                onPress={() => setModalVisible(false)}
-              >
-                <Text style={styles.textStyle}>Cancelar</Text>
-              </Pressable>
-            </View>
+            <Pressable
+              style={[
+                styles.btnModal,
+                { backgroundColor: "rgba(192, 54, 54, 1)" },
+              ]}
+              onPress={onClose}
+            >
+              <Text style={styles.textStyle}>Cancelar</Text>
+            </Pressable>
           </View>
         </View>
-      </Modal>
-    </View>
+      </View>
+    </Modal>
   );
 }
 

@@ -1,65 +1,39 @@
-export const toggleAccionable = (rutaId, metaId, accionableId) => {
-  const nuevasRutas = rutas.map((ruta) => {
-    if (ruta.id !== rutaId) return ruta;
-    return {
-      ...ruta,
-      metas: ruta.metas.map((meta) => {
-        if (meta.id !== metaId) return meta;
-        return {
-          ...meta,
-          accionables: meta.accionables.map((acc) =>
-            acc.id === accionableId ? { ...acc, checked: !acc.checked } : acc,
-          ),
-        };
-      }),
-    };
-  });
-  guardarRutas(nuevasRutas);
-};
-
-export const agregarNuevaMeta = (rutaId, nuevoTitulo) => {
-  const nuevasRutas = rutas.map((ruta) => {
-    if (ruta.id !== rutaId) return ruta;
-
+export const agregarNuevaMeta = (rutas, rutaId, nuevoTitulo) => {
+  return rutas.map((ruta) => {
+    // NORMALIZADO: String() para evitar fallos de tipos
+    if (String(ruta.id) !== String(rutaId)) return ruta;
     const nuevaMeta = {
-      id: Date.now(),
+      id: Date.now().toString(),
       titulo: nuevoTitulo,
       descripcion: "",
       accionables: [],
     };
-
     return {
       ...ruta,
       metas: [...ruta.metas, nuevaMeta],
     };
   });
-
-  guardarRutas(nuevasRutas);
 };
 
-const editarMeta = (rutaId, metaId, nuevoTitulo) => {
-  const nuevasRutas = rutas.map((ruta) => {
-    if (ruta.id !== rutaId) return ruta;
+export const editarMeta = (rutas, rutaId, metaId, nuevoTitulo) => {
+  return rutas.map((ruta) => {
+    if (String(ruta.id) !== String(rutaId)) return ruta;
     return {
       ...ruta,
       metas: ruta.metas.map((meta) => {
-        if (meta.id !== metaId) return meta;
+        if (String(meta.id) !== String(metaId)) return meta;
         return { ...meta, titulo: nuevoTitulo };
       }),
     };
   });
-  setRutas(nuevasRutas);
 };
 
-// Función para ELIMINAR una meta completa
-const eliminarMeta = (rutaId, metaId) => {
-  const nuevasRutas = rutas.map((ruta) => {
-    if (ruta.id !== rutaId) return ruta;
+export const eliminarMeta = (rutas, rutaId, metaId) => {
+  return rutas.map((ruta) => {
+    if (String(ruta.id) !== String(rutaId)) return ruta;
     return {
       ...ruta,
-      // Filtramos para dejar fuera la meta que coincida con el ID
-      metas: ruta.metas.filter((meta) => meta.id !== metaId),
+      metas: ruta.metas.filter((meta) => String(meta.id) !== String(metaId)),
     };
   });
-  setRutas(nuevasRutas);
 };

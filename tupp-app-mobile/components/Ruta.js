@@ -1,5 +1,4 @@
-import { StatusBar } from "expo-status-bar";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   View,
   Text,
@@ -7,19 +6,24 @@ import {
   StyleSheet,
   LayoutAnimation,
   Pressable,
-  Modal,
 } from "react-native";
+import AntDesign from '@expo/vector-icons/AntDesign';
 import Meta from "./Meta";
 import AgregarMeta from "./AgregarMeta";
+import InfoRuta from "./InfoRuta";
+import infoRutas from "../data/infoRutas.json";
 
-export default function Ruta({ ruta, onToggle, onAgregarMeta }) {
+export default function Ruta({ 
+  ruta,
+  onToggle,
+  onAgregarMeta,
+  onEditarMeta,
+  onEliminarMeta,
+  onAgregarAccionable,
+  onEditarAccionable,
+  onEliminarAccionable,
+}) {
   const [abierto, setAbierto] = useState(false);
-
-  const totalAccionablesRuta = ruta.metas.reduce((acc, meta) => acc + meta.accionables.length, 0);
-  const completadosRuta = ruta.metas.reduce((acc, meta) => 
-    acc + meta.accionables.filter(a => a.checked).length, 0
-  );
-  const progresoRuta = totalAccionablesRuta > 0 ? (completadosRuta / totalAccionablesRuta) * 100 : 0;
 
   const toggleDropdown = () => {
     // Esto hace que el cambio de altura sea fluido
@@ -27,31 +31,39 @@ export default function Ruta({ ruta, onToggle, onAgregarMeta }) {
     setAbierto(!abierto);
   };
 
-  useEffect(() => {}, []);
-
   return (
     <View style={[styles.card, { backgroundColor: ruta.color || "#fff" }]}>
       <TouchableOpacity
         style={[styles.header, { backgroundColor: ruta.color || "#fff" }]}
-        onPress={toggleDropdown}
         activeOpacity={0.7}
+        onPress={toggleDropdown}
       >
         <Text style={styles.titulo}>RUTA DE {ruta.titulo}</Text>
-        <Text style={styles.icono}>{abierto ? "▲" : "▼"}</Text>
+        <AntDesign 
+          name={abierto ? "up" : "down"} 
+          size={12} 
+          color="#2e2d2dff"
+        />
       </TouchableOpacity>
 
       {abierto && (
         <View style={styles.listaMetas}>
           {ruta.metas.map((meta, index) => (
             <Meta
-              key={index}
-              titulo={meta.titulo}
-              accionables={meta.accionables}
+              key={meta.id}
+              meta={meta}
+              rutaId={ruta.id}
               onToggle={onToggle}
+              onEditarMeta={onEditarMeta}
+              onEliminarMeta={onEliminarMeta}
+              onEditarAccionable={onEditarAccionable}
+              onAgregarAccionable={onAgregarAccionable}
+              onEliminarAccionable={onEliminarAccionable}
             />
           ))}
 
           <AgregarMeta rutaId={ruta.id} onConfirmar={onAgregarMeta} />
+          <InfoRuta descripcion={infoRutas[ruta.id].descripcion} competencias={infoRutas[ruta.id].competencias}/>
         </View>
       )}
     </View>

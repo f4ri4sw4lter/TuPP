@@ -1,11 +1,21 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View, Pressable, ScrollView } from "react-native";
+import { StyleSheet, Image, View, ScrollView, Pressable } from "react-native";
 import Ruta from "./components/Ruta";
 import config from "./data/config.json";
 import { guardarRutas, cargarRutas } from "./lib/storage";
 import { INITIAL_DATA } from "./data/rutas";
-import { toggleAccionable, agregarNuevaMeta, eliminarMeta, editarMeta } from "./services/MetaService";
+import {
+  agregarNuevaMeta,
+  editarMeta,
+  eliminarMeta,
+} from "./services/MetaService";
+import {
+  agregarAccionable,
+  toggleAccionable,
+  editarAccionable,
+  eliminarAccionable,
+} from "./services/AccionableService";
 
 export default function App() {
   const [rutas, setRutas] = useState(INITIAL_DATA);
@@ -30,28 +40,81 @@ export default function App() {
     }
   }, [rutas]);
 
+  // --- WRAPPERS DE LOS SERVICIOS ---
+
+  const handleToggle = (rutaId, metaId, accionableId) => {
+    const nuevasRutas = toggleAccionable(rutas, rutaId, metaId, accionableId);
+    setRutas(nuevasRutas);
+  };
+
+  const handleNuevoAccionable = (rutaId, metaId, tituloAcc) => {
+    const nuevasRutas = agregarAccionable(rutas, rutaId, metaId, tituloAcc);
+    setRutas(nuevasRutas);
+  };
+
+  const handleEditarAccionable = (rutaId, metaId, accId, texto) => {
+    setRutas(editarAccionable(rutas, rutaId, metaId, accId, texto));
+  };
+
+  const handleEliminarAccionable = (rutaId, metaId, accId) => {
+    setRutas(eliminarAccionable(rutas, rutaId, metaId, accId));
+  };
+
+  const handleNuevaMeta = (rutaId, nuevoTitulo) => {
+    const nuevasRutas = agregarNuevaMeta(rutas, rutaId, nuevoTitulo);
+    setRutas(nuevasRutas);
+  };
+
+  const handleEditarMeta = (rutaId, metaId, nuevoTitulo) => {
+    const nuevasRutas = editarMeta(rutas, rutaId, metaId, nuevoTitulo);
+    setRutas(nuevasRutas);
+  };
+
+  const handleEliminarMeta = (rutaId, metaId) => {
+    const nuevasRutas = eliminarMeta(rutas, rutaId, metaId);
+    setRutas(nuevasRutas);
+  };
+
   if (cargando) return null;
 
   return (
     <ScrollView style={styles.scrollView}>
-      <View style={styles.container}>
+      <View style={[styles.container, { backgroundColor: config.modo === "light" ? "#f5eaeaff" : "#191b2cff" }]}>
         <StatusBar style={config.modo === "dark" ? "light" : "dark"} />
 
-        <Pressable style={styles.header}>
-          <Text style={styles.btnModo}>
-            {config.modo === "light" ? "☀️" : "🌕"}
-          </Text>
-        </Pressable>
+        <View style={styles.header}>
+          <Image
+            source={require("./assets/icon.png")}
+            style={styles.logo}
+          />
+          {/*<Pressable 
+            style={styles.header}
+            onPress={() => {
+              config.modo = config.modo === "light" ? "dark" : "light";
+              setRutas([...rutas]);
+            }}
+          >
+            <Text style={styles.btnModo}>
+              {config.modo === "light" ? "☀️" : "🌕"}
+            </Text>
+          </Pressable>*/}
+        </View>
 
-        {/* Puedes usar `hydrated` para mostrar spinner mientras cargan datos si lo deseas */}
         {rutas.map((ruta, index) => (
           <Ruta
             key={index}
             ruta={ruta}
-            onToggle={toggleAccionable}
-            onAgregarMeta={agregarNuevaMeta}
+            onToggle={handleToggle}
+            onAgregarMeta={handleNuevaMeta}
+            onEditarMeta={handleEditarMeta}
+            onEliminarMeta={handleEliminarMeta}
+            onAgregarAccionable={handleNuevoAccionable}
+            onEditarAccionable={handleEditarAccionable}
+            onEliminarAccionable={handleEliminarAccionable}
           />
         ))}
+        <View style={styles.footer}>
+        </View>
       </View>
     </ScrollView>
   );
@@ -70,15 +133,33 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingBottom: 250,
   },
+  logo: {
+    width: 50,
+    height: 50,
+    marginBottom: 20,
+    borderRadius: 10,
+  },
   header: {
     width: "100%",
-    alignItems: "flex-end",
-    marginTop: 20,
+    alignItems: "center",
+    marginTop: 50,
   },
   btnModo: {
     padding: 10,
     backgroundColor: "#474646ff",
     borderRadius: 50,
     marginBottom: 20,
+  },
+  footer: {
+    position: "relative",
+    padding: 2,
+    alignItems: "flex-end",
+    justifyContent: "flex-end",
+    width: "100%",
+  },
+  info: {
+    padding: 10,
+    backgroundColor: "#fff",
+    borderRadius: 5,
   },
 });

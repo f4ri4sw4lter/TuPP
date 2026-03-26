@@ -1,67 +1,96 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   View,
   Text,
   TouchableOpacity,
   StyleSheet,
   LayoutAnimation,
-  Pressable,
+  Alert,
 } from "react-native";
+import AntDesign from '@expo/vector-icons/AntDesign';
 import Accionable from "./Accionable";
 import AgregarAccionable from "./AgregarAccionable";
 import EditarMeta from "./EditarMeta";
 
 export default function Meta({
-  titulo,
-  accionables,
   onToggle,
   rutaId,
-  metaId,
+  meta,
+  onEditarMeta,
+  onEliminarMeta,
+  onEditarAccionable,
+  onAgregarAccionable,
+  onEliminarAccionable,
 }) {
   const [abierto, setAbierto] = useState(false);
-  const [editarMetaVisible, setEditarMetaVisible] = useState(false);
+  const [modalEditar, setModalEditar] = useState(false);
+  const [accionableSeleccionado, setAccionableSeleccionado] = useState(null);
+  const [modalAccionableVisible, setModalAccionableVisible] = useState(false);
+
+  const handleLongPressAcc = (acc) => {
+    setAccionableSeleccionado(acc);
+    setModalAccionableVisible(true);
+  };
 
   const toggleDropdown = () => {
-    // Esto hace que el cambio de altura sea fluido
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setAbierto(!abierto);
   };
 
-  const toggleModalEditarMeta = () => {
-    setEditarMetaVisible(true);
-  };
-
-  const completados = accionables.filter((a) => a.checked).length;
-  const total = accionables.length;
+  const completados = meta.accionables.filter((a) => a.checked).length;
+  const total = meta.accionables.length;
   const progreso = total > 0 ? (completados / total) * 100 : 0;
   const anchoProgreso = `${progreso}%`;
 
   return (
     <View style={styles.card}>
-      <TouchableOpacity style={styles.header} onPress={toggleDropdown}>
+      <TouchableOpacity
+        style={styles.header}
+        onPress={toggleDropdown}
+        onLongPress={() => setModalEditar(true)}
+      >
         <View style={styles.headerTexto}>
-          <Text style={styles.titulo}>{titulo}</Text>
+          <Text style={styles.titulo}>{meta.titulo}</Text>
           <View style={styles.contenedorBarra}>
-            {/* Ahora es reactivo al prop 'accionables' */}
             <View style={[styles.barraRelleno, { width: anchoProgreso }]} />
           </View>
         </View>
-        <Text style={styles.icono}>{abierto ? "▲" : "▼"}</Text>
+        <AntDesign name={abierto ? "up" : "down"} size={12} color="#2e2d2dff" />
       </TouchableOpacity>
 
       {abierto && (
         <View style={styles.contenido}>
-          {accionables.map((acc) => (
+          {meta.accionables.map((acc) => (
             <Accionable
               key={acc.id}
               titulo={acc.titulo}
               checked={acc.checked}
-              onPress={() => onToggle(rutaId, metaId, acc.id)} // Subimos el evento
+              onPress={() => onToggle(rutaId, meta.id, acc.id)}
+              onEditar={(nuevoTexto) =>
+                onEditarAccionable(rutaId, meta.id, acc.id, nuevoTexto)
+              }
+              onEliminar={() => onEliminarAccionable(rutaId, meta.id, acc.id)}
             />
           ))}
-          <AgregarAccionable />
+          <AgregarAccionable
+            onConfirmar={(texto) => onAgregarAccionable(rutaId, meta.id, texto)}
+          />
         </View>
       )}
+
+      <EditarMeta
+        show={modalEditar}
+        tituloMeta={meta.titulo}
+        onClose={() => setModalEditar(false)}
+        onConfirmar={(nuevoTitulo) => {
+          onEditarMeta(rutaId, meta.id, nuevoTitulo);
+          setModalEditar(false);
+        }}
+        onEliminar={() => {
+          onEliminarMeta(rutaId, meta.id);
+          setModalEditar(false);
+        }}
+      />
     </View>
   );
 }

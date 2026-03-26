@@ -8,10 +8,9 @@ import {
   TextInput,
   Pressable,
 } from "react-native";
+import AntDesign from "@expo/vector-icons/AntDesign";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
-// AgregarMeta receives an optional `ruta` prop (string or object) that identifies
-// the route (ruta) to which the new meta will belong. When the user presses
-// "Aceptar" we log that ruta together with the new meta text.
 export default function AgregarMeta({ rutaId, onConfirmar }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [text, onChangeText] = useState("");
@@ -30,10 +29,18 @@ export default function AgregarMeta({ rutaId, onConfirmar }) {
   return (
     <View>
       <Pressable
-        style={styles.btnAgregarMeta}
+        style={({ pressed }) => [
+          styles.btnAgregarMeta,
+          {
+            opacity: pressed ? 0.5 : 1,
+            transform: [{ scale: pressed ? 0.96 : 1 }],
+          },
+        ]}
         onPress={() => setModalVisible(true)}
       >
-        <Text style={styles.textStyle}>+</Text>
+        <Text style={styles.textStyle}>
+          <MaterialIcons name="add-circle-outline" size={20} color="white" />
+        </Text>
       </Pressable>
       <Modal
         animationType="slide"
@@ -45,7 +52,10 @@ export default function AgregarMeta({ rutaId, onConfirmar }) {
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <Text style={styles.modalText}>Agregar meta</Text>
+            <Text style={styles.modalText}>
+              <AntDesign name="form" size={16} color="black" /> Agregar
+              meta{" "}
+            </Text>
 
             <TextInput
               style={styles.input}
@@ -150,6 +160,7 @@ const styles = StyleSheet.create({
     height: 40,
     marginBottom: 15,
     paddingHorizontal: 10,
-    width: "100%",
+    minWidth: 300,
+    maxWidth: "100%",
   },
 });

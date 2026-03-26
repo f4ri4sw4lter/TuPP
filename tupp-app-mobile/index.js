@@ -1,5 +1,4 @@
 import { registerRootComponent } from 'expo';
-import {MMKV} from 'react-native-mmkv';
 
 import App from './App';
 
