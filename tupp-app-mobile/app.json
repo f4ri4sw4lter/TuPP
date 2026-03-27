@@ -23,6 +23,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "610a3b23-d62c-4488-ae8b-6ff6be06d557"
+      }
+    },
+    "owner": "f4ri4sw4lters-organization"
   }
 }
