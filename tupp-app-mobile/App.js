@@ -1,7 +1,8 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Image, View, ScrollView, Pressable } from "react-native";
+import { StyleSheet, Image, View, ScrollView } from "react-native";
 import Ruta from "./components/Ruta";
+import Menu from "./components/Menu";
 import config from "./data/config.json";
 import { guardarRutas, cargarRutas } from "./lib/storage";
 import { INITIAL_DATA } from "./data/rutas";
@@ -79,7 +80,7 @@ export default function App() {
 
   return (
     <ScrollView style={styles.scrollView}>
-      <View style={[styles.container, { backgroundColor: config.modo === "light" ? "#f5eaeaff" : "#191b2cff" }]}>
+      <View style={styles.container}>
         <StatusBar style={config.modo === "dark" ? "light" : "dark"} />
 
         <View style={styles.header}>
@@ -87,17 +88,6 @@ export default function App() {
             source={require("./assets/icon.png")}
             style={styles.logo}
           />
-          {/*<Pressable 
-            style={styles.header}
-            onPress={() => {
-              config.modo = config.modo === "light" ? "dark" : "light";
-              setRutas([...rutas]);
-            }}
-          >
-            <Text style={styles.btnModo}>
-              {config.modo === "light" ? "☀️" : "🌕"}
-            </Text>
-          </Pressable>*/}
         </View>
 
         {rutas.map((ruta, index) => (
@@ -113,9 +103,8 @@ export default function App() {
             onEliminarAccionable={handleEliminarAccionable}
           />
         ))}
-        <View style={styles.footer}>
-        </View>
       </View>
+      <Menu />
     </ScrollView>
   );
 }
@@ -126,7 +115,7 @@ const styles = StyleSheet.create({
   },
   container: {
     alignItems: "center",
-    backgroundColor: config.modo === "light" ? "#fff" : "#191b2cff",
+    backgroundColor: "#0D1117",
     flex: 1,
     justifyContent: "flex-start",
     height: "100%",
