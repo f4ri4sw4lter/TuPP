@@ -1,6 +1,12 @@
 import { StatusBar } from "expo-status-bar";
-import React, { useEffect, useState } from "react";
-import { StyleSheet, Image, View, ScrollView } from "react-native";
+import { useEffect, useState } from "react";
+import { StyleSheet, Text, View, ScrollView } from "react-native";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import {
+  SafeAreaProvider,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
+
 import Ruta from "./components/Ruta";
 import Menu from "./components/Menu";
 import config from "./data/config.json";
@@ -18,9 +24,12 @@ import {
   eliminarAccionable,
 } from "./services/AccionableService";
 
-export default function App() {
+function MainApp() {
   const [rutas, setRutas] = useState(INITIAL_DATA);
+  const [rutaActual, setRutaActual] = useState(1);
   const [cargando, setCargando] = useState(true);
+  const [conf, setConf] = useState(config);
+  const insets = useSafeAreaInsets();
 
   useEffect(() => {
     const inicializar = async () => {
@@ -41,114 +50,97 @@ export default function App() {
     }
   }, [rutas]);
 
-  // --- WRAPPERS DE LOS SERVICIOS ---
-
-  const handleToggle = (rutaId, metaId, accionableId) => {
-    const nuevasRutas = toggleAccionable(rutas, rutaId, metaId, accionableId);
-    setRutas(nuevasRutas);
-  };
-
-  const handleNuevoAccionable = (rutaId, metaId, tituloAcc) => {
-    const nuevasRutas = agregarAccionable(rutas, rutaId, metaId, tituloAcc);
-    setRutas(nuevasRutas);
-  };
-
-  const handleEditarAccionable = (rutaId, metaId, accId, texto) => {
+  // --- WRAPPERS DE LOS SERVICIOS (Iguales a los que tenías) ---
+  const handleToggle = (rutaId, metaId, accionableId) =>
+    setRutas(toggleAccionable(rutas, rutaId, metaId, accionableId));
+  const handleNuevoAccionable = (rutaId, metaId, tituloAcc) =>
+    setRutas(agregarAccionable(rutas, rutaId, metaId, tituloAcc));
+  const handleEditarAccionable = (rutaId, metaId, accId, texto) =>
     setRutas(editarAccionable(rutas, rutaId, metaId, accId, texto));
-  };
-
-  const handleEliminarAccionable = (rutaId, metaId, accId) => {
+  const handleEliminarAccionable = (rutaId, metaId, accId) =>
     setRutas(eliminarAccionable(rutas, rutaId, metaId, accId));
-  };
-
-  const handleNuevaMeta = (rutaId, nuevoTitulo) => {
-    const nuevasRutas = agregarNuevaMeta(rutas, rutaId, nuevoTitulo);
-    setRutas(nuevasRutas);
-  };
-
-  const handleEditarMeta = (rutaId, metaId, nuevoTitulo) => {
-    const nuevasRutas = editarMeta(rutas, rutaId, metaId, nuevoTitulo);
-    setRutas(nuevasRutas);
-  };
-
-  const handleEliminarMeta = (rutaId, metaId) => {
-    const nuevasRutas = eliminarMeta(rutas, rutaId, metaId);
-    setRutas(nuevasRutas);
-  };
+  const handleNuevaMeta = (rutaId, nuevoTitulo) =>
+    setRutas(agregarNuevaMeta(rutas, rutaId, nuevoTitulo));
+  const handleEditarMeta = (rutaId, metaId, nuevoTitulo) =>
+    setRutas(editarMeta(rutas, rutaId, metaId, nuevoTitulo));
+  const handleEliminarMeta = (rutaId, metaId) =>
+    setRutas(eliminarMeta(rutas, rutaId, metaId));
 
   if (cargando) return null;
 
   return (
-    <ScrollView style={styles.scrollView}>
-      <View style={styles.container}>
-        <StatusBar style={config.modo === "dark" ? "light" : "dark"} />
+    <View style={[styles.mainWrapper, { backgroundColor: "#0D1117" }]}>
+      <StatusBar style={conf.modo === "dark" ? "light" : "dark"} />
 
-        <View style={styles.header}>
-          <Image
-            source={require("./assets/icon.png")}
-            style={styles.logo}
-          />
-        </View>
-
-        {rutas.map((ruta, index) => (
-          <Ruta
-            key={index}
-            ruta={ruta}
-            onToggle={handleToggle}
-            onAgregarMeta={handleNuevaMeta}
-            onEditarMeta={handleEditarMeta}
-            onEliminarMeta={handleEliminarMeta}
-            onAgregarAccionable={handleNuevoAccionable}
-            onEditarAccionable={handleEditarAccionable}
-            onEliminarAccionable={handleEliminarAccionable}
-          />
-        ))}
+      <View style={[styles.head, { paddingTop: insets.top + 10 }]}>
+        <MaterialCommunityIcons
+          name="fleur-de-lis"
+          size={36}
+          color="#8c30b1ff"
+        />
+        <Text style={{ color: "white", fontSize: 24, fontWeight: "bold" }}>
+          NOMBRE APELLIDO
+        </Text>
       </View>
-      <Menu />
-    </ScrollView>
+
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
+      >
+        <View style={styles.container}>
+          {rutas
+            .filter((ruta) => ruta.id === rutaActual)
+            .map((ruta) => (
+              <Ruta
+                key={ruta.id}
+                ruta={ruta}
+                onToggle={handleToggle}
+                onAgregarMeta={handleNuevaMeta}
+                onEditarMeta={handleEditarMeta}
+                onEliminarMeta={handleEliminarMeta}
+                onAgregarAccionable={handleNuevoAccionable}
+                onEditarAccionable={handleEditarAccionable}
+                onEliminarAccionable={handleEliminarAccionable}
+              />
+            ))}
+        </View>
+      </ScrollView>
+
+      <View
+        style={{ paddingBottom: insets.bottom, backgroundColor: "#161b22ff" }}
+      >
+        <Menu rutaActual={rutaActual} setRutaActual={setRutaActual} />
+      </View>
+    </View>
+  );
+}
+
+export default function App() {
+  return (
+    <SafeAreaProvider>
+      <MainApp />
+    </SafeAreaProvider>
   );
 }
 
 const styles = StyleSheet.create({
+  mainWrapper: {
+    flex: 1,
+  },
   scrollView: {
-    minHeight: "auto",
+    flex: 1,
+  },
+  scrollContent: {
+    paddingBottom: 20,
+  },
+  head: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingBottom: 15,
+    backgroundColor: "#161b22ff",
   },
   container: {
-    alignItems: "center",
-    backgroundColor: "#0D1117",
-    flex: 1,
-    justifyContent: "flex-start",
-    height: "100%",
     padding: 20,
-    paddingBottom: 250,
-  },
-  logo: {
-    width: 50,
-    height: 50,
-    marginBottom: 20,
-    borderRadius: 10,
-  },
-  header: {
-    width: "100%",
-    alignItems: "center",
-    marginTop: 50,
-  },
-  btnModo: {
-    padding: 10,
-    backgroundColor: "#474646ff",
-    borderRadius: 50,
-    marginBottom: 20,
-  },
-  footer: {
-    position: "relative",
-    padding: 2,
-    alignItems: "flex-end",
-    justifyContent: "flex-end",
-    width: "100%",
-  },
-  info: {
-    padding: 10,
-    backgroundColor: "#fff",
-    borderRadius: 5,
   },
 });

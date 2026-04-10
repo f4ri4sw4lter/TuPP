@@ -2,26 +2,27 @@ import React, { useState } from "react";
 import { Pressable, View, StyleSheet, Text, ScrollView } from "react-native";
 import { INITIAL_DATA } from "../data/rutas";
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { BlurView } from 'expo-blur'; // Para mantener el efecto que traíamos
 
-export default function Accionable() {
+export default function Accionable({ rutaActual, setRutaActual }) {
   const [rutas, setRutas] = useState(INITIAL_DATA);
 
   return (
-    <View style={styles.menuContainer}> 
+    // Usamos BlurView como contenedor principal para el efecto Glassmorphism
+    <BlurView intensity={80} tint="dark" style={styles.menuContainer}>
       <ScrollView 
-        horizontal={true}                         // Activa el scroll horizontal
-        showsHorizontalScrollIndicator={false}    // Esconde la barra de scroll
-        contentContainerStyle={styles.scrollContent} // ¡ESTO ES CLAVE!
-        bounces={true}                            // Efecto rebote al final
+        horizontal={true} 
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContent}
       >
         {rutas.map((ruta) => (
-          <Pressable key={ruta.id} style={styles.icon}>
-            <Ionicons name={ruta.icono} size={26} color="white" />
-            <Text style={styles.textIcon}>{ruta.titulo}</Text>
+          <Pressable key={ruta.id} style={styles.icon} onPress={() => setRutaActual(ruta.id)}>
+            <Ionicons name={ruta.icono} size={26} color={ruta.id === rutaActual ? ruta.color : "grey"} />
+            <Text style={[styles.textIcon, {color: ruta.id === rutaActual ? ruta.color : "grey"}]}>{ruta.titulo}</Text>
           </Pressable>
         ))}
       </ScrollView>
-    </View>
+    </BlurView>
   );
 }
 
@@ -32,12 +33,11 @@ const styles = StyleSheet.create({
     left: 0,
     width: "100%",
     zIndex: 50,
-    backgroundColor: "rgba(26, 35, 50, 0.9)", // Aumenté opacidad por si no tienes Blur
     borderTopWidth: 1,
     borderTopColor: "rgba(255, 255, 255, 0.1)",
-    borderTopLeftRadius: 40,
-    borderTopRightRadius: 40,
-    overflow: "hidden", 
+    borderTopLeftRadius: 25,
+    borderTopRightRadius: 25,
+    overflow: "hidden", // Importante para el BlurView y bordes
     elevation: 20,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: -8 },
@@ -45,19 +45,17 @@ const styles = StyleSheet.create({
     shadowRadius: 24,
   },
   scrollContent: {
-    // IMPORTANTE: El ScrollView horizontal necesita flexDirection: 'row' AQUÍ
-    flexDirection: "row", 
+    // Aquí es donde aplicamos el flex y el padding del contenido
+    flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 20, // Espacio al inicio y al final del scroll
-    paddingTop: 20,
-    paddingBottom: 35,    // Espacio extra para el área de "home" en iPhone
-    // No pongas width: '100%' aquí, deja que crezca según los hijos
+    paddingHorizontal: 20,
+    paddingTop: 12,
+    paddingBottom: 24, // Un poco más de espacio abajo para que respire
   },
   icon: {
     alignItems: "center",
-    justifyContent: "center",
-    width: 90,             // Ancho fijo para asegurar que el contenido exceda la pantalla
-    marginHorizontal: 5,
+    width: 80, // Ancho fijo para que todos los items ocupen lo mismo en el scroll
+    marginHorizontal: 10,
   },
   textIcon: {
     marginTop: 6,

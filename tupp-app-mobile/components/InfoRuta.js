@@ -1,104 +1,107 @@
 import { useState } from "react";
-import { View, Text, StyleSheet, Pressable } from "react-native"; // Quitamos FlatList
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import AntDesign from '@expo/vector-icons/AntDesign';
+import { View, Text, StyleSheet, Pressable } from "react-native";
 
-export default function InfoRuta({ descripcion, competencias }) {
+import FontAwesome from '@expo/vector-icons/FontAwesome';
+import AntDesign from '@expo/vector-icons/AntDesign';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+
+export default function InfoRuta({ descripcion, competencias, color }) {
   const [show, setShow] = useState(false);
 
-  const toggleInfo = () => setShow(!show);
-
   return (
-    <View style={styles.container}> 
-      <View style={styles.footer}>
-        <Pressable 
-          style={({ pressed }) => [
-            styles.info, 
-            { opacity: pressed ? 0.7 : 1, transform: [{ scale: pressed ? 0.95 : 1 }] }
-          ]} 
-          onPress={toggleInfo}
-        >
-          <MaterialCommunityIcons
-            name={show ? "close-circle" : "information-slab-circle-outline"}
-            size={28}
-            color={show ? "#d32f2f" : "#191b2c"}
-          />
-        </Pressable>
+    <View style={styles.infoRutaContainer}>
+      <View style={styles.titleContainer}>
+        <FontAwesome name="question-circle" size={24} color={color} style={styles.icon} />
+        <Text style={styles.title}>SOBRE ESTA RUTA</Text>
       </View>
 
-      {show && (
-        <View style={styles.containerInfo}>
-          <Text style={styles.descripcion}><Text style={{ fontWeight: "bold" }}>Descripción:</Text> {descripcion}</Text>
-          
-          <Text style={styles.tituloCompetencias}>Competencias</Text>
-          
-          <View style={styles.listaCompetencias}>
-            {competencias.map((competencia, index) => (
-              <View key={index} style={styles.competenciaContainer}>
-                <Text style={styles.competencia}>
-                   <MaterialCommunityIcons name="fleur-de-lis" size={20} color="#5513a1ff" /> {competencia}
-                </Text>
-              </View>
-            ))}
-          </View>
-        </View>
-      )}
+      <Text style={styles.descripcion}>{descripcion}</Text>
+      <Pressable 
+        style={({ pressed }) => [
+          {
+            opacity: pressed ? 0.5 : 1,
+            transform: [{ scale: pressed ? 0.96 : 1 }],
+          },
+        ]}
+        onPress={() => setShow(!show)}
+      >
+        <Text style={[styles.verCompetencias, { color: color }]} onPress={() => setShow(!show)}>
+          {show ? "OCULTAR COMPETENCIAS" : "VER COMPETENCIAS"} {" "}
+          {show 
+            ?
+            <AntDesign name="arrow-up" size={12} color={color} />
+            :
+            <AntDesign name="arrow-down" size={12} color={color} />
+          }
+        </Text>
+      </Pressable>
+
+      <View onShow={show} style={[{ display: show ? "flex" : "none" }, styles.competenciasContainer]}>
+        <Text style={[styles.competenciasTitulo, { fontWeight: "700" }]}>COMPETENCIAS:</Text>
+        {competencias.map((comp, index) => (
+          <Text key={index} style={styles.competencia}>
+            <MaterialCommunityIcons name="fleur-de-lis" size={18} color="white" />
+            {" "}{comp}
+          </Text>
+        ))}
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  containerInfo: {
-    backgroundColor: "#e7ec9cff",
-    borderColor: "#191b2c",
+  infoRutaContainer: {
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
     borderWidth: 1,
-    borderRadius: 12,
-    padding: 6,
-    marginTop: 10,
-  },
-  footer: {
-    marginTop: 10,
-    alignItems: "flex-end",
+    borderColor: "rgba(255, 255, 255, 0.1)",
+    borderRadius: 20,
+    elevation: 20,
+    marginBottom: 60,
+    overflow: "hidden", // Importante para el BlurView y bordes
+    padding: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: -8 },
+    shadowOpacity: 0.4,
+    shadowRadius: 24,
     width: "100%",
   },
-  info: {
-    backgroundColor: "#fff",
-    borderRadius: 50,
-    padding: 2,
+  titleContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 10,
   },
-  containerInfo: {
-    marginTop: 10,
-  },
-  tituloCompetencias: {
-    fontWeight: "bold", 
-    textAlign: "center",
-    marginBottom: 5,
-    color: "#191b2c",
-    fontSize: 18,
-    color: "#fff",
-    textShadowColor: 'rgba(10, 10, 10, 0.75)',
-    textShadowOffset: { width: 1, height: 2 },
-    textShadowRadius: 8,
-  },
-  descripcion: {
-    backgroundColor: "#191b2c",
-    borderRadius: 12,
+  title: {
     color: "#fff",
     fontSize: 16,
-    padding: 15,
-    marginBottom: 15,
-    lineHeight: 20,
-    textAlign: "center",
+    fontWeight: "700",
+    marginLeft: 10,
   },
-  competenciaContainer: {
-    width: "100%",
+  icon: {
+    margin: 0,
+  },
+  descripcion: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  verCompetencias: {
+    fontWeight: "600", 
+    textAlign: "right",
+    paddingTop: 10,
+  },
+  competenciasContainer: {
+    marginTop: 10,
+    gap: 5,
+  },
+  competenciasTitulo: {
+    color: "#fff",
+    fontSize: 14,
+    marginBottom: 5,
   },
   competencia: {
     color: "#fff",
-    padding: 10,
-    fontSize: 16,
-    textShadowColor: 'rgba(10, 10, 10, 0.75)',
-    textShadowOffset: { width: 1, height: 2 },
-    textShadowRadius: 8,
+    fontSize: 14,
+    marginLeft: 10,
+    marginBottom: 3,
   },
 });

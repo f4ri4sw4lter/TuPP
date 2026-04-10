@@ -24,7 +24,7 @@ export default function AgregarAccionable({ onConfirmar }) {
   };
 
   return (
-    <View>
+    <View style={styles.container}>
       <Pressable
         style={({ pressed }) => [
           styles.btnAgregarAccionable,
@@ -36,7 +36,7 @@ export default function AgregarAccionable({ onConfirmar }) {
         onPress={() => setModalVisible(true)}
       >
         <Text style={styles.textStyle}>
-          <MaterialIcons name="add-circle-outline" size={20} color="white" />
+          + AGREGAR NUEVO ACCIONABLE
         </Text>
       </Pressable>
 
@@ -49,8 +49,7 @@ export default function AgregarAccionable({ onConfirmar }) {
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <Text style={styles.modalText}>
-              <AntDesign name="form" size={16} color="black" /> Agregar
-              accionable
+              <AntDesign name="form" size={16} color="black" /> Titulo del accionable
             </Text>
 
             <TextInput
@@ -95,21 +94,19 @@ export default function AgregarAccionable({ onConfirmar }) {
 const styles = StyleSheet.create({
   btnAgregarAccionable: {
     alignSelf: "center",
-    backgroundColor: "rgba(58, 177, 28, 1)",
-    borderRadius: 5,
-    borderColor: "rgba(0, 0, 0, 0.1)",
-    borderWidth: 2,
+    borderRadius: 10,
+    borderColor: "rgba(255, 255, 255, 0.1)",
+    borderWidth: 1,
+    borderStyle: "dotted",
     color: "#ddd",
     fontSize: 18,
     fontWeight: "bold",
-    paddingHorizontal: 12,
-    paddingVertical: 9,
+    padding: 20,
     textAlign: "center",
     textShadowRadius: 10,
     textShadowColor: "rgba(0, 0, 0, 0.75)",
     textShadowOffset: { width: 2, height: 2 },
-    marginTop: 5,
-    width: "98%",
+    width: "100%",
   },
   centeredView: {
     flex: 1,
@@ -121,7 +118,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 20,
     padding: 15,
-    alignItems: "center",
+    alignItems: "stretch",
     shadowColor: "#000",
     shadowOffset: {
       width: 2,
@@ -130,6 +127,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
     shadowRadius: 5,
     elevation: 5,
+    width: "90%",
   },
   modalText: {
     marginBottom: 15,
@@ -160,8 +158,8 @@ const styles = StyleSheet.create({
     height: 40,
     marginBottom: 15,
     paddingHorizontal: 10,
-    width: "100%",
     minWidth: 300,
     maxWidth: "100%",
+    width: "100%",
   },
 });

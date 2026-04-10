@@ -7,7 +7,7 @@ import {
   LayoutAnimation,
   Alert,
 } from "react-native";
-import AntDesign from '@expo/vector-icons/AntDesign';
+import AntDesign from "@expo/vector-icons/AntDesign";
 import Accionable from "./Accionable";
 import AgregarAccionable from "./AgregarAccionable";
 import EditarMeta from "./EditarMeta";
@@ -15,6 +15,7 @@ import EditarMeta from "./EditarMeta";
 export default function Meta({
   onToggle,
   rutaId,
+  rutaColor,
   meta,
   onEditarMeta,
   onEliminarMeta,
@@ -50,12 +51,23 @@ export default function Meta({
         onLongPress={() => setModalEditar(true)}
       >
         <View style={styles.headerTexto}>
-          <Text style={styles.titulo}>{meta.titulo}</Text>
+
+          <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+            <Text style={styles.titulo}>{meta.titulo}</Text>
+            <AntDesign name={abierto ? "up" : "down"} size={12} color="#afafafff" />
+          </View>
+
+          <View style={styles.progresoContainer}>
+            <Text style={[styles.progresoTexto, { color: rutaColor }]}>
+              PROGRESO DE META
+            </Text>
+            <Text style={styles.porcentaje}>{anchoProgreso}</Text>
+          </View>
+
           <View style={styles.contenedorBarra}>
-            <View style={[styles.barraRelleno, { width: anchoProgreso }]} />
+            <View style={{ width: anchoProgreso, backgroundColor: rutaColor, height: "100%" }} />
           </View>
         </View>
-        <AntDesign name={abierto ? "up" : "down"} size={12} color="#2e2d2dff" />
       </TouchableOpacity>
 
       {abierto && (
@@ -70,6 +82,7 @@ export default function Meta({
                 onEditarAccionable(rutaId, meta.id, acc.id, nuevoTexto)
               }
               onEliminar={() => onEliminarAccionable(rutaId, meta.id, acc.id)}
+              color={rutaColor}
             />
           ))}
           <AgregarAccionable
@@ -96,54 +109,6 @@ export default function Meta({
 }
 
 const styles = StyleSheet.create({
-  card: {
-    margin: 3,
-    borderRadius: 12,
-    elevation: 3,
-    overflow: "hidden",
-    backgroundColor: "#fff",
-  },
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    padding: 15,
-    alignItems: "center",
-  },
-  headerTexto: {
-    flex: 1, // Para que ocupe el espacio sobrante antes del icono
-    marginRight: 10,
-  },
-  titulo: {
-    fontSize: 16,
-    fontWeight: "bold",
-    marginBottom: 8,
-  },
-  contenedorBarra: {
-    height: 6,
-    backgroundColor: "#e0e0e0", // Fondo gris de la barra
-    borderRadius: 3,
-    width: "100%",
-    overflow: "hidden",
-  },
-  barraRelleno: {
-    height: "100%",
-    backgroundColor: "#4CAF50", // Color verde del progreso
-  },
-  icono: {
-    fontSize: 12,
-    color: "#000000ff",
-  },
-  contenido: {
-    padding: 15,
-    borderTopWidth: 1,
-    borderTopColor: "rgba(0,0,0,0.05)",
-  },
-  btnAgregarMeta: {
-    alignItems: "center",
-    borderRadius: 5,
-    marginTop: 2,
-    padding: 2,
-  },
   agregarMetaTexto: {
     backgroundColor: "rgba(58, 177, 28, 1)",
     borderRadius: 5,
@@ -157,5 +122,66 @@ const styles = StyleSheet.create({
     textShadowColor: "rgba(0, 0, 0, 0.75)",
     textShadowOffset: { width: 2, height: 2 },
     width: "100%",
+  },
+  btnAgregarMeta: {
+    alignItems: "center",
+    borderRadius: 5,
+    marginTop: 2,
+    padding: 2,
+  },
+  card: {
+    marginBottom: 20,
+    borderRadius: 12,
+    elevation: 3,
+    overflow: "hidden",
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
+  },
+  contenido: {
+    padding: 15,
+    borderTopWidth: 1,
+    borderTopColor: "rgba(0,0,0,0.05)",
+  },
+  contenedorBarra: {
+    height: 6,
+    backgroundColor: "rgba(0, 0, 0, 0.75)",
+    borderRadius: 3,
+    width: "100%",
+    overflow: "hidden",
+  },
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    padding: 15,
+    alignItems: "center",
+  },
+  headerTexto: {
+    flex: 1,
+  },
+  titulo: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginBottom: 8,
+    color: "#ffffff",
+  },
+  porcentaje: {
+    fontSize: 10,
+    fontWeight: "600",
+    color: "#ffffffff",
+  },
+  progresoContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 4,
+  },
+  progresoTexto: {
+    fontSize: 10,
+    fontWeight: "600",
+    marginBottom: 4,
+    color: "#2e2d2dff",
+  },
+  icono: {
+    fontSize: 12,
+    color: "#fdfdfdff",
   },
 });

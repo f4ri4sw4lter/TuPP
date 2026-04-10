@@ -8,6 +8,7 @@ export default function Accionable({
   onPress,
   onEditar,
   onEliminar,
+  color
 }) {
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -20,12 +21,12 @@ export default function Accionable({
         delayLongPress={500}
         activeOpacity={0.8}
       >
+        <View style={[styles.checkbox, checked && {backgroundColor: color}]}>
+          {checked && <Text style={styles.checkMark}>✓</Text>}
+        </View>
         <Text style={[styles.label, checked && styles.labelChecked]}>
           {titulo}
         </Text>
-        <View style={[styles.checkbox, checked && styles.checkboxChecked]}>
-          {checked && <Text style={styles.checkMark}>✓</Text>}
-        </View>
       </TouchableOpacity>
 
       <EditarAccionable
@@ -47,20 +48,19 @@ export default function Accionable({
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: "row",
     alignItems: "center",
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
+    borderBottomWidth: 1,
+    borderRadius: 8,
+    flexDirection: "row",
     justifyContent: "space-between",
+    marginVertical: 2,
     paddingVertical: 10,
     paddingHorizontal: 10,
-    backgroundColor: "#fff",
-    borderBottomWidth: 1,
-    borderBottomColor: "#eee",
-    borderRadius: 8,
-    marginVertical: 2,
   },
   label: {
     fontSize: 14,
-    color: "#333",
+    color: "#cccbcbff",
     flex: 1,
   },
   labelChecked: {
@@ -68,17 +68,17 @@ const styles = StyleSheet.create({
     textDecorationLine: "line-through", // Efecto de tarea completada
   },
   checkbox: {
-    width: 22,
-    height: 22,
-    borderWidth: 2,
-    borderColor: "#4CAF50",
-    borderRadius: 6,
-    justifyContent: "center",
     alignItems: "center",
-    marginLeft: 10,
+    borderWidth: 2,
+    borderColor: "rgba(255, 255, 255, 0.1)",
+    borderRadius: 6,
+    height: 35,
+    justifyContent: "center",
+    margin: 10,
+    width: 30,
   },
   checkboxChecked: {
-    backgroundColor: "#4CAF50",
+    backgroundColor: "#2979FF",
   },
   checkMark: {
     color: "#fff",

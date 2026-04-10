@@ -1,5 +1,4 @@
-import { StatusBar } from "expo-status-bar";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import {
   View,
   Text,
@@ -9,43 +8,43 @@ import {
   Pressable,
 } from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
-export default function AgregarMeta({ rutaId, onConfirmar }) {
+export default function AgregarMeta({ rutaId, onConfirmar, rutaColor }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [text, onChangeText] = useState("");
+  const inputRef = useRef(null);
 
   useEffect(() => {}, []);
 
   const saveMeta = () => {
     if (text.trim().length === 0) return;
-
     onConfirmar(rutaId, text);
-
     setModalVisible(false);
     onChangeText("");
   };
 
   return (
-    <View>
+    <View style={{ marginBottom: 20 }}>
       <Pressable
         style={({ pressed }) => [
           styles.btnAgregarMeta,
           {
             opacity: pressed ? 0.5 : 1,
             transform: [{ scale: pressed ? 0.96 : 1 }],
+            backgroundColor: rutaColor
           },
         ]}
         onPress={() => setModalVisible(true)}
       >
         <Text style={styles.textStyle}>
-          <MaterialIcons name="add-circle-outline" size={20} color="white" />
+          + AGREGAR NUEVA META
         </Text>
       </Pressable>
       <Modal
         animationType="slide"
         transparent={true}
         visible={modalVisible}
+        onShow={() => {inputRef.current?.focus();}}
         onRequestClose={() => {
           setModalVisible(!modalVisible);
         }}
@@ -53,11 +52,11 @@ export default function AgregarMeta({ rutaId, onConfirmar }) {
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <Text style={styles.modalText}>
-              <AntDesign name="form" size={16} color="black" /> Agregar
-              meta{" "}
+              <AntDesign name="form" size={16} color="black" /> Titulo de la meta
             </Text>
 
             <TextInput
+              ref={inputRef}
               style={styles.input}
               onChangeText={onChangeText}
               value={text}
@@ -95,21 +94,18 @@ export default function AgregarMeta({ rutaId, onConfirmar }) {
 const styles = StyleSheet.create({
   btnAgregarMeta: {
     alignSelf: "center",
-    backgroundColor: "rgba(58, 177, 28, 1)",
-    borderRadius: 5,
+    borderRadius: 10,
     borderColor: "rgba(0, 0, 0, 0.1)",
-    borderWidth: 2,
+    borderWidth: 1,
     color: "#ddd",
     fontSize: 18,
     fontWeight: "bold",
-    paddingHorizontal: 12,
-    paddingVertical: 9,
+    padding: 20,
     textAlign: "center",
     textShadowRadius: 10,
     textShadowColor: "rgba(0, 0, 0, 0.75)",
     textShadowOffset: { width: 2, height: 2 },
-    marginTop: 5,
-    width: "98%",
+    width: "100%",
   },
   centeredView: {
     flex: 1,
@@ -121,7 +117,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 20,
     padding: 15,
-    alignItems: "center",
+    alignItems: "stretch",
     shadowColor: "#000",
     shadowOffset: {
       width: 2,
@@ -130,6 +126,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
     shadowRadius: 5,
     elevation: 5,
+    width: "90%",
   },
   modalText: {
     marginBottom: 15,
@@ -161,6 +158,6 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     paddingHorizontal: 10,
     minWidth: 300,
-    maxWidth: "100%",
+    width: "100%",
   },
 });
