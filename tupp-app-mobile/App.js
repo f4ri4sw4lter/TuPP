@@ -1,146 +1,68 @@
-import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
-import { StyleSheet, Text, View, ScrollView } from "react-native";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import {
-  SafeAreaProvider,
-  useSafeAreaInsets,
-} from "react-native-safe-area-context";
+import { StatusBar } from "expo-status-bar";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import Ruta from "./components/Ruta";
-import Menu from "./components/Menu";
-import config from "./data/config.json";
-import { guardarRutas, cargarRutas } from "./lib/storage";
-import { INITIAL_DATA } from "./data/rutas";
-import {
-  agregarNuevaMeta,
-  editarMeta,
-  eliminarMeta,
-} from "./services/MetaService";
-import {
-  agregarAccionable,
-  toggleAccionable,
-  editarAccionable,
-  eliminarAccionable,
-} from "./services/AccionableService";
+import CONFIG from "./data/config.js";
+import PerfilUsuario from "./pages/PerfilUsuario";
+import Configuracion from "./pages/Configuracion";
 
-function MainApp() {
-  const [rutas, setRutas] = useState(INITIAL_DATA);
-  const [rutaActual, setRutaActual] = useState(1);
+export default function App() {
   const [cargando, setCargando] = useState(true);
-  const [conf, setConf] = useState(config);
-  const insets = useSafeAreaInsets();
+  const [estaConfigurado, setEstaConfigurado] = useState(false);
+  const [mostrarConfiguracion, setMostrarConfiguracion] = useState(false);
 
   useEffect(() => {
-    const inicializar = async () => {
-      const datosPersistidos = await cargarRutas();
-      if (datosPersistidos) {
-        setRutas(datosPersistidos);
-      } else {
-        setRutas(INITIAL_DATA);
+    const cargarConfiguracion = async () => {
+      try {
+        const configuracionGuardada = await AsyncStorage.getItem("configuracion");
+        if (configuracionGuardada) {
+          const configuracion = JSON.parse(configuracionGuardada);
+          CONFIG.nombre = configuracion.nombre || "";
+          CONFIG.rama = configuracion.rama || "";
+          CONFIG.foto = configuracion.foto || "";
+          setEstaConfigurado(configuracion.configuradoInicial === true);
+        }
+      } catch (error) {
+        console.error("Error al cargar la configuración:", error);
+      } finally {
+        setCargando(false);
       }
-      setCargando(false);
     };
-    inicializar();
+    cargarConfiguracion();
   }, []);
-
-  useEffect(() => {
-    if (!cargando) {
-      guardarRutas(rutas);
-    }
-  }, [rutas]);
-
-  // --- WRAPPERS DE LOS SERVICIOS (Iguales a los que tenías) ---
-  const handleToggle = (rutaId, metaId, accionableId) =>
-    setRutas(toggleAccionable(rutas, rutaId, metaId, accionableId));
-  const handleNuevoAccionable = (rutaId, metaId, tituloAcc) =>
-    setRutas(agregarAccionable(rutas, rutaId, metaId, tituloAcc));
-  const handleEditarAccionable = (rutaId, metaId, accId, texto) =>
-    setRutas(editarAccionable(rutas, rutaId, metaId, accId, texto));
-  const handleEliminarAccionable = (rutaId, metaId, accId) =>
-    setRutas(eliminarAccionable(rutas, rutaId, metaId, accId));
-  const handleNuevaMeta = (rutaId, nuevoTitulo) =>
-    setRutas(agregarNuevaMeta(rutas, rutaId, nuevoTitulo));
-  const handleEditarMeta = (rutaId, metaId, nuevoTitulo) =>
-    setRutas(editarMeta(rutas, rutaId, metaId, nuevoTitulo));
-  const handleEliminarMeta = (rutaId, metaId) =>
-    setRutas(eliminarMeta(rutas, rutaId, metaId));
 
   if (cargando) return null;
 
-  return (
-    <View style={[styles.mainWrapper, { backgroundColor: "#0D1117" }]}>
-      <StatusBar style={conf.modo === "dark" ? "light" : "dark"} />
+  const handleConfigurationSaved = () => {
+    setEstaConfigurado(true);
+    setMostrarConfiguracion(false);
+  };
 
-      <View style={[styles.head, { paddingTop: insets.top + 10 }]}>
-        <MaterialCommunityIcons
-          name="fleur-de-lis"
-          size={36}
-          color="#8c30b1ff"
-        />
-        <Text style={{ color: "white", fontSize: 24, fontWeight: "bold" }}>
-          NOMBRE APELLIDO
-        </Text>
-      </View>
+  const handleGoToConfiguration = () => {
+    setMostrarConfiguracion(true);
+  };
 
-      <ScrollView
-        style={styles.scrollView}
-        contentContainerStyle={styles.scrollContent}
-      >
-        <View style={styles.container}>
-          {rutas
-            .filter((ruta) => ruta.id === rutaActual)
-            .map((ruta) => (
-              <Ruta
-                key={ruta.id}
-                ruta={ruta}
-                onToggle={handleToggle}
-                onAgregarMeta={handleNuevaMeta}
-                onEditarMeta={handleEditarMeta}
-                onEliminarMeta={handleEliminarMeta}
-                onAgregarAccionable={handleNuevoAccionable}
-                onEditarAccionable={handleEditarAccionable}
-                onEliminarAccionable={handleEliminarAccionable}
-              />
-            ))}
-        </View>
-      </ScrollView>
+  const handleGoBack = () => {
+    setMostrarConfiguracion(false);
+  };
 
-      <View
-        style={{ paddingBottom: insets.bottom, backgroundColor: "#161b22ff" }}
-      >
-        <Menu rutaActual={rutaActual} setRutaActual={setRutaActual} />
-      </View>
-    </View>
-  );
-}
-
-export default function App() {
   return (
     <SafeAreaProvider>
-      <MainApp />
+      <StatusBar style={"dark"} />
+      {mostrarConfiguracion ? (
+        <Configuracion 
+          onConfigurationSaved={handleConfigurationSaved}
+          isInitialSetup={!estaConfigurado}
+        />
+      ) : estaConfigurado ? (
+        <PerfilUsuario onGoToConfiguration={handleGoToConfiguration} />
+      ) : (
+        <Configuracion 
+          onConfigurationSaved={handleConfigurationSaved}
+          isInitialSetup={true}
+        />
+      )}
     </SafeAreaProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  mainWrapper: {
-    flex: 1,
-  },
-  scrollView: {
-    flex: 1,
-  },
-  scrollContent: {
-    paddingBottom: 20,
-  },
-  head: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    paddingBottom: 15,
-    backgroundColor: "#161b22ff",
-  },
-  container: {
-    padding: 20,
-  },
-});

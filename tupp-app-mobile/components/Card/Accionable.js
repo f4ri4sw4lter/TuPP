@@ -1,6 +1,6 @@
 import React, { useState } from "react"; // Necesitamos estado para el modal
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import EditarAccionable from "./EditarAccionable";
+import EditarAccionable from "../Model/EditarAccionable";
 
 export default function Accionable({
   titulo,

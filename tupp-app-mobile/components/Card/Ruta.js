@@ -2,9 +2,9 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 import { View, Text, StyleSheet } from "react-native";
 
 import Meta from "./Meta";
-import AgregarMeta from "./AgregarMeta";
+import AgregarMeta from "../Model/AgregarMeta";
 import InfoRuta from "./InfoRuta";
-import infoRutas from "../data/infoRutas.json";
+import infoRutas from "../../data/infoRutas.json";
 
 export default function Ruta({
   ruta,

@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import { Pressable, View, StyleSheet, Text, ScrollView } from "react-native";
 import { INITIAL_DATA } from "../data/rutas";
 import Ionicons from '@expo/vector-icons/Ionicons';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { BlurView } from 'expo-blur'; // Para mantener el efecto que traíamos
 
-export default function Accionable({ rutaActual, setRutaActual }) {
+export default function Accionable({ rutaActual, setRutaActual, onGoToConfiguration }) {
   const [rutas, setRutas] = useState(INITIAL_DATA);
 
   return (
@@ -21,6 +22,10 @@ export default function Accionable({ rutaActual, setRutaActual }) {
             <Text style={[styles.textIcon, {color: ruta.id === rutaActual ? ruta.color : "grey"}]}>{ruta.titulo}</Text>
           </Pressable>
         ))}
+        <Pressable style={styles.icon} onPress={onGoToConfiguration}>
+          <FontAwesome name="cog" size={26} color="grey" />
+          <Text style={[styles.textIcon, {color: "grey"}]}>Configuración</Text>
+        </Pressable>
       </ScrollView>
     </BlurView>
   );

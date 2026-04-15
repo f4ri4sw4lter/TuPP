@@ -9,8 +9,8 @@ import {
 } from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Accionable from "./Accionable";
-import AgregarAccionable from "./AgregarAccionable";
-import EditarMeta from "./EditarMeta";
+import AgregarAccionable from "../Model/AgregarAccionable";
+import EditarMeta from "../Model/EditarMeta";
 
 export default function Meta({
   onToggle,
