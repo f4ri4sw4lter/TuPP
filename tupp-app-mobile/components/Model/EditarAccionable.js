@@ -11,7 +11,7 @@ import {
 import AntDesign from '@expo/vector-icons/AntDesign';
 
 export default function EditarAccionable({
-  tituloAccionable, // Usamos el nombre correcto
+  tituloAccionable,
   show,
   onClose,
   onConfirmar,
@@ -19,7 +19,6 @@ export default function EditarAccionable({
 }) {
   const [text, onChangeText] = useState(tituloAccionable);
 
-  // Sincronizamos cuando se abre el modal
   useEffect(() => {
     if (show) onChangeText(tituloAccionable);
   }, [show, tituloAccionable]);

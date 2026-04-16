@@ -13,21 +13,22 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from "expo-image-picker";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
-import Entypo from '@expo/vector-icons/Entypo';
+import Entypo from "@expo/vector-icons/Entypo";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import {
-  useSafeAreaInsets,
-} from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import Toast from "react-native-toast-message";
 
-export default function Configuracion({ onConfigurationSaved, onGoBack, isInitialSetup = false }) {
+export default function Configuracion({
+  onConfigurationSaved,
+  onGoBack,
+  isInitialSetup = false,
+}) {
   const [nombre, setNombre] = useState("");
   const [rama, setRama] = useState("");
   const [foto, setFoto] = useState(null);
   const insets = useSafeAreaInsets();
 
-  const ramas = [
-    { label: "Rover", value: "Rover" },
-  ];
+  const ramas = [{ label: "Rover", value: "Rover" }];
 
   const seleccionarImagen = async () => {
     try {
@@ -49,34 +50,45 @@ export default function Configuracion({ onConfigurationSaved, onGoBack, isInitia
 
   const guardarConfiguracion = async () => {
     if (!nombre.trim() || !rama || !foto) {
-      alert("Por favor completa todos los campos (nombre, rama y foto)");
+      Toast.show({
+        type: "error",
+        text1: "Campos incompletos",
+        text2: "Por favor completa nombre, rama y foto ⚠️",
+      });
       return;
     }
 
     try {
-      const configuracion = {
-        nombre: nombre,
-        rama: rama,
-        modo: "dark",
-        idioma: "es",
-        foto: foto,
-        configuradoInicial: true,
-      };
-      await AsyncStorage.setItem("configuracion", JSON.stringify(configuracion));
-      alert("Configuración guardada exitosamente");
-      if (onConfigurationSaved) {
-        onConfigurationSaved();
-      }
+      const configuracion = { nombre, rama, foto };
+      await AsyncStorage.setItem(
+        "configuracion",
+        JSON.stringify(configuracion),<Toast />
+      );
+
+      Toast.show({
+        type: "success",
+        text1: "¡Listo! ✅",
+        text2: "Configuración guardada correctamente",
+        position: "bottom",
+      });
+
+      setTimeout(() => {
+        if (onConfigurationSaved) onConfigurationSaved();
+      }, 1500);
     } catch (error) {
-      console.error("Error al guardar la configuración:", error);
-      alert("Error al guardar la configuración");
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: "No se pudo guardar la configuración",
+      });
     }
   };
 
   useEffect(() => {
     const cargarConfiguracion = async () => {
       try {
-        const configuracionGuardada = await AsyncStorage.getItem("configuracion");
+        const configuracionGuardada =
+          await AsyncStorage.getItem("configuracion");
         if (configuracionGuardada) {
           const configuracion = JSON.parse(configuracionGuardada);
           setNombre(configuracion.nombre || "");
@@ -95,7 +107,11 @@ export default function Configuracion({ onConfigurationSaved, onGoBack, isInitia
       {!isInitialSetup && (
         <View style={[styles.header, { paddingTop: insets.top + 10 }]}>
           <Pressable onPress={onGoBack} style={styles.backButton}>
-            <MaterialCommunityIcons name="arrow-left" size={28} color="#558DFF" />
+            <MaterialCommunityIcons
+              name="arrow-left"
+              size={28}
+              color="#558DFF"
+            />
           </Pressable>
           <Text style={styles.headerTitle}>Configuración</Text>
           <View style={{ width: 28 }} />
@@ -108,12 +124,14 @@ export default function Configuracion({ onConfigurationSaved, onGoBack, isInitia
         <View style={styles.fotoPerfilContainer}>
           <View>
             {foto ? (
-              <Image
-                source={{ uri: foto }}
-                style={styles.fotoPerfil}
-              />
+              <Image source={{ uri: foto }} style={styles.fotoPerfil} />
             ) : (
-              <FontAwesome name="user-circle" size={120} color="#558DFF" style={styles.foto} />
+              <FontAwesome
+                name="user-circle"
+                size={120}
+                color="#558DFF"
+                style={styles.foto}
+              />
             )}
             <Pressable style={styles.editFoto} onPress={seleccionarImagen}>
               <FontAwesome5 name="edit" size={20} />
@@ -143,7 +161,7 @@ export default function Configuracion({ onConfigurationSaved, onGoBack, isInitia
           <View style={styles.fieldGroup}>
             <Text style={styles.label}>Rama</Text>
             <Dropdown
-              style={[styles.input, { paddingVertical: 0 }]} // Reutiliza tus estilos de input
+              style={[styles.input, { paddingVertical: 0 }]}
               placeholderStyle={{ color: "#666" }}
               selectedTextStyle={{ color: "#ffffffff" }}
               data={ramas}
@@ -157,12 +175,16 @@ export default function Configuracion({ onConfigurationSaved, onGoBack, isInitia
         </View>
 
         <View style={styles.guardarContainer}>
-          <Pressable style={styles.guardarButton} onPress={() => guardarConfiguracion()}>
+          <Pressable
+            style={styles.guardarButton}
+            onPress={() => guardarConfiguracion()}
+          >
             <Entypo name="save" size={24} color="black" />
             <Text style={styles.guardarText}>Guardar cambios</Text>
           </Pressable>
         </View>
       </ScrollView>
+      <Toast />
     </View>
   );
 }
@@ -225,7 +247,7 @@ const styles = StyleSheet.create({
     right: 0,
   },
   fotoPerfilText: {
-    color: "#ffffffff", 
+    color: "#ffffffff",
     marginTop: 10,
     textAlign: "center",
   },
@@ -294,5 +316,5 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 25,
     justifyContent: "center",
-  }
+  },
 });

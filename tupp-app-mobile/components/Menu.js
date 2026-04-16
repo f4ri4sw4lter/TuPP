@@ -3,13 +3,12 @@ import { Pressable, View, StyleSheet, Text, ScrollView } from "react-native";
 import { INITIAL_DATA } from "../data/rutas";
 import Ionicons from '@expo/vector-icons/Ionicons';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { BlurView } from 'expo-blur'; // Para mantener el efecto que traíamos
+import { BlurView } from 'expo-blur';
 
 export default function Accionable({ rutaActual, setRutaActual, onGoToConfiguration }) {
   const [rutas, setRutas] = useState(INITIAL_DATA);
 
   return (
-    // Usamos BlurView como contenedor principal para el efecto Glassmorphism
     <BlurView intensity={80} tint="dark" style={styles.menuContainer}>
       <ScrollView 
         horizontal={true} 
@@ -42,7 +41,7 @@ const styles = StyleSheet.create({
     borderTopColor: "rgba(255, 255, 255, 0.1)",
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
-    overflow: "hidden", // Importante para el BlurView y bordes
+    overflow: "hidden",
     elevation: 20,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: -8 },
@@ -50,16 +49,15 @@ const styles = StyleSheet.create({
     shadowRadius: 24,
   },
   scrollContent: {
-    // Aquí es donde aplicamos el flex y el padding del contenido
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 20,
     paddingTop: 12,
-    paddingBottom: 24, // Un poco más de espacio abajo para que respire
+    paddingBottom: 24,
   },
   icon: {
     alignItems: "center",
-    width: 80, // Ancho fijo para que todos los items ocupen lo mismo en el scroll
+    width: 80,
     marginHorizontal: 10,
   },
   textIcon: {

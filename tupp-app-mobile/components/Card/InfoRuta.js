@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     elevation: 20,
     marginBottom: 60,
-    overflow: "hidden", // Importante para el BlurView y bordes
+    overflow: "hidden",
     padding: 20,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: -8 },

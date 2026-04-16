@@ -1,4 +1,4 @@
-import React, { useState } from "react"; // Necesitamos estado para el modal
+import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import EditarAccionable from "../Model/EditarAccionable";
 
@@ -16,8 +16,8 @@ export default function Accionable({
     <View>
       <TouchableOpacity
         style={styles.container}
-        onPress={onPress} // Un solo touch: Toggle (Checked)
-        onLongPress={() => setModalVisible(true)} // Mantener apretado: Abrir edición
+        onPress={onPress}
+        onLongPress={() => setModalVisible(true)}
         delayLongPress={500}
         activeOpacity={0.8}
       >
@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
   },
   labelChecked: {
     color: "#aaa",
-    textDecorationLine: "line-through", // Efecto de tarea completada
+    textDecorationLine: "line-through",
   },
   checkbox: {
     alignItems: "center",

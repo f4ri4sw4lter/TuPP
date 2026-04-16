@@ -1,6 +1,5 @@
 export const agregarNuevaMeta = (rutas, rutaId, nuevoTitulo) => {
   return rutas.map((ruta) => {
-    // NORMALIZADO: String() para evitar fallos de tipos
     if (String(ruta.id) !== String(rutaId)) return ruta;
     const nuevaMeta = {
       id: Date.now().toString(),

@@ -1,11 +1,12 @@
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
-import { StyleSheet, Text, View, ScrollView } from "react-native";
+import { StyleSheet, Text, View, ScrollView, Image } from "react-native";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import {
   SafeAreaProvider,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import Ruta from "../components/Card/Ruta";
 import Menu from "../components/Menu";
@@ -27,12 +28,14 @@ import {
 export default function PerfilUsuario({ onGoToConfiguration }) {
   const [rutas, setRutas] = useState(INITIAL_DATA);
   const [rutaActual, setRutaActual] = useState(1);
-  const [conf, setConf] = useState(config);
   const [cargando, setCargando] = useState(true);
+  const [configuracion, setConfiguracion] = useState();
   const insets = useSafeAreaInsets();
 
   useEffect(() => {
     const inicializar = async () => {
+      const configuracion = await AsyncStorage.getItem("configuracion");
+      setConfiguracion(JSON.parse(configuracion));
       const datosPersistidos = await cargarRutas();
       if (datosPersistidos) {
         setRutas(datosPersistidos);
@@ -50,7 +53,7 @@ export default function PerfilUsuario({ onGoToConfiguration }) {
     }
   }, [rutas]);
 
-  // --- WRAPPERS DE LOS SERVICIOS (Iguales a los que tenías) ---
+  // --- WRAPPERS DE LOS SERVICIOS ---
   const handleToggle = (rutaId, metaId, accionableId) =>
     setRutas(toggleAccionable(rutas, rutaId, metaId, accionableId));
   const handleNuevoAccionable = (rutaId, metaId, tituloAcc) =>
@@ -70,17 +73,35 @@ export default function PerfilUsuario({ onGoToConfiguration }) {
 
   return (
     <View style={[styles.mainWrapper, { backgroundColor: "#0D1117" }]}>
-      <StatusBar style={"dark"} />
-
       <View style={[styles.head, { paddingTop: insets.top + 10 }]}>
-        <MaterialCommunityIcons
-          name="fleur-de-lis"
-          size={36}
-          color="#8c30b1ff"
-        />
-        <Text style={{ color: "white", fontSize: 24, fontWeight: "bold" }}>
-          NOMBRE APELLIDO
-        </Text>
+        
+        <View style={styles.headComponent}>
+          <MaterialCommunityIcons
+            name="fleur-de-lis"
+            size={36}
+            color="#8c30b1ff"
+          />
+          <Text style={{ color: "white", fontSize: 24, fontWeight: "bold" }}>
+            {configuracion.rama}
+          </Text>
+        </View>
+
+        <View style={styles.headComponent}>
+          <Text style={{ color: "white", fontSize: 24, fontWeight: "bold" }}>
+            {configuracion.nombre}
+          </Text>
+          {configuracion.foto ? (
+            <Image source={{ uri: configuracion.foto }} style={styles.fotoPerfil} />
+          ) : (
+            <FontAwesome
+              name="user-circle"
+              size={120}
+              color="#558DFF"
+              style={styles.foto}
+            />
+          )}
+        </View>
+
       </View>
 
       <ScrollView
@@ -109,7 +130,11 @@ export default function PerfilUsuario({ onGoToConfiguration }) {
       <View
         style={{ paddingBottom: insets.bottom, backgroundColor: "#161b22ff" }}
       >
-        <Menu rutaActual={rutaActual} setRutaActual={setRutaActual} onGoToConfiguration={onGoToConfiguration} />
+        <Menu
+          rutaActual={rutaActual}
+          setRutaActual={setRutaActual}
+          onGoToConfiguration={onGoToConfiguration}
+        />
       </View>
     </View>
   );
@@ -128,9 +153,20 @@ const styles = StyleSheet.create({
   head: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
-    paddingBottom: 15,
+    justifyContent: "space-between",
+    padding: 10,
     backgroundColor: "#161b22ff",
+  },
+  headComponent: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
+  },
+  fotoPerfil: {
+    width: 48,
+    height: 48,
+    borderRadius: 40,
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
   },
   container: {
     padding: 20,

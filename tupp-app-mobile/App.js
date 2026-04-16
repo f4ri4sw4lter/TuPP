@@ -17,11 +17,7 @@ export default function App() {
       try {
         const configuracionGuardada = await AsyncStorage.getItem("configuracion");
         if (configuracionGuardada) {
-          const configuracion = JSON.parse(configuracionGuardada);
-          CONFIG.nombre = configuracion.nombre || "";
-          CONFIG.rama = configuracion.rama || "";
-          CONFIG.foto = configuracion.foto || "";
-          setEstaConfigurado(configuracion.configuradoInicial === true);
+          setEstaConfigurado(true);
         }
       } catch (error) {
         console.error("Error al cargar la configuración:", error);
@@ -49,11 +45,12 @@ export default function App() {
 
   return (
     <SafeAreaProvider>
-      <StatusBar style={"dark"} />
+      <StatusBar style={"light"} />
       {mostrarConfiguracion ? (
         <Configuracion 
           onConfigurationSaved={handleConfigurationSaved}
           isInitialSetup={!estaConfigurado}
+          onGoBack={handleGoBack}
         />
       ) : estaConfigurado ? (
         <PerfilUsuario onGoToConfiguration={handleGoToConfiguration} />
