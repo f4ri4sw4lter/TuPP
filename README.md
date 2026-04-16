@@ -11,5 +11,5 @@ Aplicación mobile desarrollada con ReactNative.
 * React v19.1.0
 
 ## To do list
-- [ ] Agregar configuraciones.
+- [x] Agregar configuraciones.
 - [ ] Agregar modo oscuro y claro.
