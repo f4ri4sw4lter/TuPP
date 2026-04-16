@@ -1,4 +1,4 @@
-![Texto alternativo](./tupp-app-mobile/assets/banner.png)
+![Banner de aplicación](./tupp-app-mobile/assets/banner.png)
 
 # TuPP
 Aplicacion mobile para manejar el desarrollo de Progresion Personal de scouts en la rama rovers.
