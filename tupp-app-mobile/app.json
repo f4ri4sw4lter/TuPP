@@ -13,13 +13,21 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.tuppappmobile"
+      "bundleIdentifier": "com.anonymous.tuppappmobile",
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "TuPP necesita acceso a tu galería para que puedas seleccionar una foto de perfil.",
+        "NSPhotoLibraryAddOnlyUsageDescription": "TuPP necesita permiso para guardar fotos en tu galería."
+      }
     },
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE"
       },
-      "package": "com.anonymous.tuppappmobile"
+      "package": "com.anonymous.tuppappmobile",
+      "permissions": [
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"

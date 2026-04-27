@@ -15,7 +15,9 @@ export default function Ruta({
   onAgregarAccionable,
   onEditarAccionable,
   onEliminarAccionable,
+  modo,
 }) {
+
   return (
     <View style={[styles.rutaContainer]}>
       <View
@@ -24,8 +26,16 @@ export default function Ruta({
           { borderColor: ruta.color, shadowColor: ruta.color },
         ]}
       >
-        <Text style={styles.titulo}>RUTA DE {ruta.titulo}</Text>
-        <Text style={styles.cantidadMetas}>
+        <Text 
+          style={[
+            styles.titulo, 
+            {
+              color: modo == "dark" ? "#ffffffff" : "#161b22ff",
+            }]}>
+          RUTA DE {ruta.titulo}
+        </Text>
+        <Text 
+          style={[styles.cantidadMetas, {color: modo == "dark" ? "#ffffffff" : "#161b22ff"}]}>
           <AntDesign name="flag" size={12} color="#2979FF" />
           {" "} {ruta.metas.length} {ruta.metas.length === 1 ? "META" : "METAS"}
         </Text>
@@ -44,6 +54,7 @@ export default function Ruta({
             onEditarAccionable={onEditarAccionable}
             onAgregarAccionable={onAgregarAccionable}
             onEliminarAccionable={onEliminarAccionable}
+            modo={modo}
           />
         ))}
 
@@ -58,6 +69,7 @@ export default function Ruta({
         descripcion={infoRutas[ruta.id].descripcion}
         competencias={infoRutas[ruta.id].competencias}
         color={ruta.color}
+        modo={modo}
       />
     </View>
   );
@@ -85,7 +97,6 @@ const styles = StyleSheet.create({
   titulo: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "#fff",
     textShadowColor: "rgba(0, 0, 0, 0.75)",
     textShadowOffset: { width: 2, height: 2 },
     textShadowRadius: 10,

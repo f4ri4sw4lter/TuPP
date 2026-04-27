@@ -11,7 +11,7 @@ import {
 import AntDesign from "@expo/vector-icons/AntDesign";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
-export default function AgregarAccionable({ onConfirmar }) {
+export default function AgregarAccionable({ onConfirmar, modo }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [text, onChangeText] = useState("");
 
@@ -35,7 +35,7 @@ export default function AgregarAccionable({ onConfirmar }) {
         ]}
         onPress={() => setModalVisible(true)}
       >
-        <Text style={styles.textStyle}>
+        <Text style={[styles.textStyle, { color: modo == "dark" ? "#ffffffff" : "#161b22ff" }]}>
           + AGREGAR NUEVO ACCIONABLE
         </Text>
       </Pressable>

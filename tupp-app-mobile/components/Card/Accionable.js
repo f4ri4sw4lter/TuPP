@@ -8,7 +8,8 @@ export default function Accionable({
   onPress,
   onEditar,
   onEliminar,
-  color
+  color,
+  modo
 }) {
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -21,10 +22,10 @@ export default function Accionable({
         delayLongPress={500}
         activeOpacity={0.8}
       >
-        <View style={[styles.checkbox, checked && {backgroundColor: color}]}>
+        <View style={[styles.checkbox,{backgroundColor: modo == "dark" ? "#161b22ff" : "#cccbcbff"}, checked && {backgroundColor: color}]}>
           {checked && <Text style={styles.checkMark}>✓</Text>}
         </View>
-        <Text style={[styles.label, checked && styles.labelChecked]}>
+        <Text style={[styles.label, checked && styles.labelChecked, {color: modo == "dark" ? "#cccbcbff" : "#161b22ff"}]}>
           {titulo}
         </Text>
       </TouchableOpacity>
@@ -49,7 +50,6 @@ export default function Accionable({
 const styles = StyleSheet.create({
   container: {
     alignItems: "center",
-    backgroundColor: "rgba(255, 255, 255, 0.1)",
     borderBottomWidth: 1,
     borderRadius: 8,
     flexDirection: "row",

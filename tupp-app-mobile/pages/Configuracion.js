@@ -26,12 +26,23 @@ export default function Configuracion({
   const [nombre, setNombre] = useState("");
   const [rama, setRama] = useState("");
   const [foto, setFoto] = useState(null);
+  const [modo, setModo] = useState("light");
   const insets = useSafeAreaInsets();
 
   const ramas = [{ label: "Rover", value: "Rover" }];
 
   const seleccionarImagen = async () => {
     try {
+      // Solicitar permisos de acceso a la galería
+      const permiso = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+      if (!permiso.granted) {
+        alert(
+          "Necesitas permitir acceso a la galería para seleccionar una foto. Por favor, ve a Configuración > Aplicaciones > TuPP > Permisos y activa 'Fotos y videos'.",
+        );
+        return;
+      }
+
       const resultado = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
@@ -44,25 +55,25 @@ export default function Configuracion({
       }
     } catch (error) {
       console.error("Error al seleccionar imagen:", error);
-      alert("Error al seleccionar imagen");
+      alert("Error al seleccionar imagen", error.message);
     }
   };
 
   const guardarConfiguracion = async () => {
-    if (!nombre.trim() || !rama || !foto) {
+    if (!nombre.trim() || !rama) {
       Toast.show({
         type: "error",
         text1: "Campos incompletos",
-        text2: "Por favor completa nombre, rama y foto ⚠️",
+        text2: "Por favor completa nombre y rama ⚠️",
       });
       return;
     }
 
     try {
-      const configuracion = { nombre, rama, foto };
+      const configuracion = { nombre, rama, foto, modo }; // Agregamos modo
       await AsyncStorage.setItem(
         "configuracion",
-        JSON.stringify(configuracion),<Toast />
+        JSON.stringify(configuracion),
       );
 
       Toast.show({
@@ -76,6 +87,7 @@ export default function Configuracion({
         if (onConfigurationSaved) onConfigurationSaved();
       }, 1500);
     } catch (error) {
+      console.log(error);
       Toast.show({
         type: "error",
         text1: "Error",
@@ -94,6 +106,7 @@ export default function Configuracion({
           setNombre(configuracion.nombre || "");
           setRama(configuracion.rama || "");
           setFoto(configuracion.foto || null);
+          setModo(configuracion.modo || "light"); // Cargamos modo si existe
         }
       } catch (error) {
         console.error("Error al cargar la configuración:", error);
@@ -103,9 +116,16 @@ export default function Configuracion({
   }, []);
 
   return (
-    <View style={styles.mainWrapper}>
+    <View style={[styles.mainWrapper, { backgroundColor: modo === "dark" ? "#000000" : "#FFFFFF" }]}>
       {!isInitialSetup && (
-        <View style={[styles.header, { paddingTop: insets.top + 10 }]}>
+        <View 
+          style={[
+            styles.header, 
+            { 
+              paddingTop: insets.top + 10, 
+              backgroundColor: modo === "dark" ? "#161b22ff" : "#F3F0F2",
+              color: modo === "dark" ? "#ffffffff" : "#161b22ff",
+            }]}>
           <Pressable onPress={onGoBack} style={styles.backButton}>
             <MaterialCommunityIcons
               name="arrow-left"
@@ -113,7 +133,7 @@ export default function Configuracion({
               color="#558DFF"
             />
           </Pressable>
-          <Text style={styles.headerTitle}>Configuración</Text>
+          <Text style={[styles.headerTitle, { color: modo === "dark" ? "#ffffffff" : "#161b22ff" }]}>Configuración</Text>
           <View style={{ width: 28 }} />
         </View>
       )}
@@ -121,6 +141,7 @@ export default function Configuracion({
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
       >
+        {/*
         <View style={styles.fotoPerfilContainer}>
           <View>
             {foto ? (
@@ -139,17 +160,18 @@ export default function Configuracion({
           </View>
           <Text style={styles.fotoPerfilText}>Foto de perfil</Text>
         </View>
+        */}
 
-        <View style={styles.inputContainer}>
+        <View style={[styles.inputContainer, { backgroundColor: modo === "dark" ? "rgba(255, 255, 255, 0.1)" : "#F3F0F2" }]}>
           <View style={styles.inputContainerTitle}>
             <FontAwesome name="user" size={24} color="#558DFF" />
-            <Text style={styles.inputContainerTitleText}>
+            <Text style={[styles.inputContainerTitleText, { color: modo === "dark" ? "#ffffffff" : "#161b22ff" }]}>
               Información personal
             </Text>
           </View>
 
           <View style={styles.fieldGroup}>
-            <Text style={styles.label}>Nombre</Text>
+            <Text style={[styles.label, { color: modo === "dark" ? "#ffffffff" : "#161b22ff" }]}>Nombre</Text>
             <TextInput
               style={styles.input}
               onChangeText={setNombre}
@@ -159,7 +181,7 @@ export default function Configuracion({
           </View>
 
           <View style={styles.fieldGroup}>
-            <Text style={styles.label}>Rama</Text>
+            <Text style={[styles.label, { color: modo === "dark" ? "#ffffffff" : "#161b22ff" }]}>Rama</Text>
             <Dropdown
               style={[styles.input, { paddingVertical: 0 }]}
               placeholderStyle={{ color: "#666" }}
@@ -171,6 +193,55 @@ export default function Configuracion({
               value={rama}
               onChange={(item) => setRama(item.value)}
             />
+          </View>
+
+          <View style={styles.fieldGroup}>
+            <Text style={[styles.label, { color: modo === "dark" ? "#ffffffff" : "#161b22ff" }]}>Selecciona un modo</Text>
+            <View style={styles.modoButtonsContainer}>
+              <Pressable
+                style={[
+                  styles.modoButton,
+                  modo === "light" && styles.modoButtonActive,
+                ]}
+                onPress={() => setModo("light")}
+              >
+                <FontAwesome
+                  name="sun-o"
+                  size={20}
+                  color={modo === "light" ? "#fff" : "#558DFF"}
+                />
+                <Text
+                  style={[
+                    styles.modoButtonText,
+                    modo === "light" && styles.modoButtonTextActive,
+                  ]}
+                >
+                  Claro
+                </Text>
+              </Pressable>
+
+              <Pressable
+                style={[
+                  styles.modoButton,
+                  modo === "dark" && styles.modoButtonActive,
+                ]}
+                onPress={() => setModo("dark")}
+              >
+                <FontAwesome
+                  name="moon-o"
+                  size={20}
+                  color={modo === "dark" ? "#fff" : "#558DFF"}
+                />
+                <Text
+                  style={[
+                    styles.modoButtonText,
+                    modo === "dark" && styles.modoButtonTextActive,
+                  ]}
+                >
+                  Oscuro
+                </Text>
+              </Pressable>
+            </View>
           </View>
         </View>
 
@@ -192,7 +263,6 @@ export default function Configuracion({
 const styles = StyleSheet.create({
   mainWrapper: {
     flex: 1,
-    backgroundColor: "#0D1117",
   },
   header: {
     flexDirection: "row",
@@ -218,10 +288,13 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingBottom: 20,
+    marginTop: "auto",
+    marginBottom: "auto",
   },
   fotoPerfilContainer: {
     alignSelf: "center",
     marginBottom: 20,
+    marginTop: 50,
     borderRadius: 60,
     padding: 5,
   },
@@ -316,5 +389,34 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 25,
     justifyContent: "center",
+  },
+  modoButtonsContainer: {
+    flexDirection: "row",
+    gap: 10,
+  },
+  modoButton: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 15,
+    borderRadius: 8,
+    borderWidth: 2,
+    borderColor: "#558DFF",
+    backgroundColor: "#0D1117",
+  },
+  modoButtonActive: {
+    backgroundColor: "#558DFF",
+    borderColor: "#558DFF",
+  },
+  modoButtonText: {
+    color: "#558DFF",
+    fontSize: 14,
+    fontWeight: "600",
+  },
+  modoButtonTextActive: {
+    color: "#fff",
   },
 });

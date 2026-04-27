@@ -5,18 +5,18 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
-export default function InfoRuta({ descripcion, competencias, color }) {
+export default function InfoRuta({ descripcion, competencias, color, modo}) {
   const [show, setShow] = useState(false);
 
   return (
     <View style={styles.infoRutaContainer}>
       <View style={styles.titleContainer}>
         <FontAwesome name="question-circle" size={24} color={color} style={styles.icon} />
-        <Text style={styles.title}>SOBRE ESTA RUTA</Text>
+        <Text style={[styles.title, { color: modo == "dark" ? "#ffffffff" : "#161b22ff" }]}>SOBRE ESTA RUTA</Text>
       </View>
 
-      <Text style={styles.descripcion}>{descripcion}</Text>
-      <Pressable 
+      <Text style={[styles.descripcion, { color: modo == "dark" ? "#ffffffff" : "#161b22ff" }]}>{descripcion}</Text>
+      <Pressable
         style={({ pressed }) => [
           {
             opacity: pressed ? 0.5 : 1,
@@ -37,10 +37,10 @@ export default function InfoRuta({ descripcion, competencias, color }) {
       </Pressable>
 
       <View onShow={show} style={[{ display: show ? "flex" : "none" }, styles.competenciasContainer]}>
-        <Text style={[styles.competenciasTitulo, { fontWeight: "700" }]}>COMPETENCIAS:</Text>
+        <Text style={[styles.competenciasTitulo, { fontWeight: "700", color: modo == "dark" ? "#ffffffff" : "#161b22ff" }]}>COMPETENCIAS:</Text>
         {competencias.map((comp, index) => (
-          <Text key={index} style={styles.competencia}>
-            <MaterialCommunityIcons name="fleur-de-lis" size={18} color="white" />
+          <Text key={index} style={[styles.competencia, { color: modo == "dark" ? "#ffffffff" : "#161b22ff" }]}>
+            <MaterialCommunityIcons name="fleur-de-lis" size={18} color={color} />
             {" "}{comp}
           </Text>
         ))}

@@ -72,8 +72,20 @@ export default function PerfilUsuario({ onGoToConfiguration }) {
   if (cargando) return null;
 
   return (
-    <View style={[styles.mainWrapper, { backgroundColor: "#0D1117" }]}>
-      <View style={[styles.head, { paddingTop: insets.top + 10 }]}>
+    <View 
+      style={[
+        styles.mainWrapper, 
+        { 
+          backgroundColor: configuracion.modo == "dark" ? "#0D1117" : "#F3F0F2",
+          color: configuracion.modo == "dark" ? "#ffffffcc" : "#161b22ff",
+        }]}>
+      <View style={[
+        styles.head, 
+        { 
+          paddingTop: insets.top + 10, 
+          backgroundColor: configuracion.modo == "dark" ? "#161b22ff" : "#F3F0F2",
+          color: configuracion.modo == "dark" ? "#ffffffcc" : "#161b22ff",
+        }]}>
         
         <View style={styles.headComponent}>
           <MaterialCommunityIcons
@@ -81,16 +93,21 @@ export default function PerfilUsuario({ onGoToConfiguration }) {
             size={36}
             color="#8c30b1ff"
           />
-          <Text style={{ color: "white", fontSize: 24, fontWeight: "bold" }}>
+          <Text style={{ color: "#8c30b1ff", fontSize: 24, fontWeight: "bold" }}>
             {configuracion.rama}
           </Text>
         </View>
 
         <View style={styles.headComponent}>
-          <Text style={{ color: "white", fontSize: 24, fontWeight: "bold" }}>
+          <Text 
+            style={{ 
+              color: configuracion.modo == "dark" ? "#ffffffff" : "#161b22ff", 
+              fontSize: 24, 
+              fontWeight: "bold"
+            }}>
             {configuracion.nombre}
           </Text>
-          {configuracion.foto ? (
+          {/*configuracion.foto ? (
             <Image source={{ uri: configuracion.foto }} style={styles.fotoPerfil} />
           ) : (
             <FontAwesome
@@ -99,7 +116,7 @@ export default function PerfilUsuario({ onGoToConfiguration }) {
               color="#558DFF"
               style={styles.foto}
             />
-          )}
+          )*/}
         </View>
 
       </View>
@@ -122,6 +139,7 @@ export default function PerfilUsuario({ onGoToConfiguration }) {
                 onAgregarAccionable={handleNuevoAccionable}
                 onEditarAccionable={handleEditarAccionable}
                 onEliminarAccionable={handleEliminarAccionable}
+                modo={configuracion.modo}
               />
             ))}
         </View>
@@ -155,7 +173,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     padding: 10,
-    backgroundColor: "#161b22ff",
+    borderLinekColor: "#ffffff11",
+    borderBottomWidth: 1,
   },
   headComponent: {
     flexDirection: "row",

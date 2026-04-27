@@ -22,6 +22,7 @@ export default function Meta({
   onEditarAccionable,
   onAgregarAccionable,
   onEliminarAccionable,
+  modo,
 }) {
   const [abierto, setAbierto] = useState(false);
   const [modalEditar, setModalEditar] = useState(false);
@@ -44,7 +45,7 @@ export default function Meta({
   const anchoProgreso = `${progreso}%`;
 
   return (
-    <View style={styles.card}>
+    <View style={[styles.card, { backgroundColor: modo == "dark" ? "rgba(255, 255, 255, 0.1)" : "rgba(255, 255, 255, 0.75)" }]}>
       <TouchableOpacity
         style={styles.header}
         onPress={toggleDropdown}
@@ -53,7 +54,10 @@ export default function Meta({
         <View style={styles.headerTexto}>
 
           <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-            <Text style={styles.titulo}>{meta.titulo}</Text>
+            <Text 
+              style={[styles.titulo, { color: modo == "dark" ? "#ffffffff" : "#161b22ff" }]}>
+              {meta.titulo}
+            </Text>
             <AntDesign name={abierto ? "up" : "down"} size={12} color="#afafafff" />
           </View>
 
@@ -83,10 +87,12 @@ export default function Meta({
               }
               onEliminar={() => onEliminarAccionable(rutaId, meta.id, acc.id)}
               color={rutaColor}
+              modo={modo}
             />
           ))}
           <AgregarAccionable
             onConfirmar={(texto) => onAgregarAccionable(rutaId, meta.id, texto)}
+            modo={modo}
           />
         </View>
       )}
@@ -134,7 +140,6 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     elevation: 3,
     overflow: "hidden",
-    backgroundColor: "rgba(255, 255, 255, 0.1)",
   },
   contenido: {
     padding: 15,
