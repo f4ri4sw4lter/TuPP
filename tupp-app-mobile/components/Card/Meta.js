@@ -2,7 +2,7 @@ import { useState } from "react";
 import {
   View,
   Text,
-  TouchableOpacity,
+  Pressable,
   StyleSheet,
   LayoutAnimation,
   Alert,
@@ -45,9 +45,14 @@ export default function Meta({
   const anchoProgreso = `${progreso}%`;
 
   return (
-    <View style={[styles.card, { backgroundColor: modo == "dark" ? "rgba(255, 255, 255, 0.1)" : "rgba(255, 255, 255, 0.75)" }]}>
-      <TouchableOpacity
-        style={styles.header}
+    <View 
+      style={[
+        styles.card, 
+        { 
+          backgroundColor: modo == "dark" ? "rgba(255, 255, 255, 0.1)" : "rgba(255, 255, 255, 0.75)" 
+        }]}>
+      <Pressable
+        style={[styles.header, { backgroundColor: modo == "dark" ? "rgba(255, 255, 255, 0.1)" : "rgba(255, 255, 255, 0.75)" }]}
         onPress={toggleDropdown}
         onLongPress={() => setModalEditar(true)}
       >
@@ -72,10 +77,10 @@ export default function Meta({
             <View style={{ width: anchoProgreso, backgroundColor: rutaColor, height: "100%" }} />
           </View>
         </View>
-      </TouchableOpacity>
+      </Pressable>
 
       {abierto && (
-        <View style={styles.contenido}>
+        <View style={[styles.contenido, { backgroundColor: modo == "dark" ? "rgba(255, 255, 255, 0.1)" : "rgba(255, 255, 255, 0.75)" }]}>
           {meta.accionables.map((acc) => (
             <Accionable
               key={acc.id}
@@ -136,13 +141,12 @@ const styles = StyleSheet.create({
     padding: 2,
   },
   card: {
+    borderRadius: 10,
     marginBottom: 20,
-    borderRadius: 12,
     elevation: 3,
     overflow: "hidden",
   },
   contenido: {
-    padding: 15,
     borderTopWidth: 1,
     borderTopColor: "rgba(0,0,0,0.05)",
   },
@@ -166,7 +170,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
     marginBottom: 8,
-    color: "#ffffff",
   },
   porcentaje: {
     fontSize: 10,
@@ -183,10 +186,5 @@ const styles = StyleSheet.create({
     fontSize: 10,
     fontWeight: "600",
     marginBottom: 4,
-    color: "#2e2d2dff",
-  },
-  icono: {
-    fontSize: 12,
-    color: "#fdfdfdff",
-  },
+  }
 });

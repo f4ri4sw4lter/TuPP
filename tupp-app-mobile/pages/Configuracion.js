@@ -106,7 +106,7 @@ export default function Configuracion({
           setNombre(configuracion.nombre || "");
           setRama(configuracion.rama || "");
           setFoto(configuracion.foto || null);
-          setModo(configuracion.modo || "light"); // Cargamos modo si existe
+          setModo(configuracion.modo || "light");
         }
       } catch (error) {
         console.error("Error al cargar la configuración:", error);

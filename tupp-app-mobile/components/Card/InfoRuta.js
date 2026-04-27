@@ -9,10 +9,15 @@ export default function InfoRuta({ descripcion, competencias, color, modo}) {
   const [show, setShow] = useState(false);
 
   return (
-    <View style={styles.infoRutaContainer}>
+    <View style={[styles.infoRutaContainer, { backgroundColor: modo == "dark" ? "#161b22ff" : "#ffffff" }]}>
       <View style={styles.titleContainer}>
         <FontAwesome name="question-circle" size={24} color={color} style={styles.icon} />
-        <Text style={[styles.title, { color: modo == "dark" ? "#ffffffff" : "#161b22ff" }]}>SOBRE ESTA RUTA</Text>
+        <Text 
+          style={[
+            styles.title, 
+            { 
+              color: modo == "dark" ? "#ffffffff" : "#161b22ff" 
+            }]}>SOBRE ESTA RUTA</Text>
       </View>
 
       <Text style={[styles.descripcion, { color: modo == "dark" ? "#ffffffff" : "#161b22ff" }]}>{descripcion}</Text>
@@ -51,7 +56,6 @@ export default function InfoRuta({ descripcion, competencias, color, modo}) {
 
 const styles = StyleSheet.create({
   infoRutaContainer: {
-    backgroundColor: "rgba(255, 255, 255, 0.1)",
     borderWidth: 1,
     borderColor: "rgba(255, 255, 255, 0.1)",
     borderRadius: 20,
@@ -59,10 +63,6 @@ const styles = StyleSheet.create({
     marginBottom: 60,
     overflow: "hidden",
     padding: 20,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: -8 },
-    shadowOpacity: 0.4,
-    shadowRadius: 24,
     width: "100%",
   },
   titleContainer: {
@@ -71,7 +71,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   title: {
-    color: "#fff",
     fontSize: 16,
     fontWeight: "700",
     marginLeft: 10,
@@ -80,7 +79,6 @@ const styles = StyleSheet.create({
     margin: 0,
   },
   descripcion: {
-    color: "#fff",
     fontSize: 16,
     fontWeight: "600",
   },
@@ -94,12 +92,10 @@ const styles = StyleSheet.create({
     gap: 5,
   },
   competenciasTitulo: {
-    color: "#fff",
     fontSize: 14,
     marginBottom: 5,
   },
   competencia: {
-    color: "#fff",
     fontSize: 14,
     marginLeft: 10,
     marginBottom: 3,

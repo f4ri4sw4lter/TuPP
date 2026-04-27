@@ -17,13 +17,13 @@ export default function Accionable({ rutaActual, setRutaActual, onGoToConfigurat
       >
         {rutas.map((ruta) => (
           <Pressable key={ruta.id} style={styles.icon} onPress={() => setRutaActual(ruta.id)}>
-            <Ionicons name={ruta.icono} size={26} color={ruta.id === rutaActual ? ruta.color : "grey"} />
-            <Text style={[styles.textIcon, {color: ruta.id === rutaActual ? ruta.color : "grey"}]}>{ruta.titulo}</Text>
+            <Ionicons name={ruta.icono} size={26} color={ruta.id === rutaActual ? ruta.color : "#d6d3d3ff"} />
+            <Text style={[styles.textIcon, {color: ruta.id === rutaActual ? ruta.color : "#d6d3d3ff"}]}>{ruta.titulo}</Text>
           </Pressable>
         ))}
         <Pressable style={styles.icon} onPress={onGoToConfiguration}>
-          <FontAwesome name="cog" size={26} color="grey" />
-          <Text style={[styles.textIcon, {color: "grey"}]}>Configuración</Text>
+          <FontAwesome name="cog" size={26} color="#d6d3d3ff" />
+          <Text style={[styles.textIcon, {color: "#d6d3d3ff"}]}>Configuración</Text>
         </Pressable>
       </ScrollView>
     </BlurView>

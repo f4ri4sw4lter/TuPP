@@ -10,13 +10,27 @@ import Configuracion from "./pages/Configuracion";
 export default function App() {
   const [cargando, setCargando] = useState(true);
   const [estaConfigurado, setEstaConfigurado] = useState(false);
+  const [configuracion, setConfiguracion] = useState({
+    nombre: "",
+    rama: "",
+    foto: null,
+    modo: "light",
+  });
   const [mostrarConfiguracion, setMostrarConfiguracion] = useState(false);
 
   useEffect(() => {
     const cargarConfiguracion = async () => {
       try {
-        const configuracionGuardada = await AsyncStorage.getItem("configuracion");
+        const configuracionGuardada =
+          await AsyncStorage.getItem("configuracion");
         if (configuracionGuardada) {
+          const config = JSON.parse(configuracionGuardada);
+          setConfiguracion({
+            nombre: config.nombre || "",
+            rama: config.rama || "",
+            foto: config.foto || null,
+            modo: config.modo || "light",
+          });
           setEstaConfigurado(true);
         }
       } catch (error) {
@@ -33,6 +47,24 @@ export default function App() {
   const handleConfigurationSaved = () => {
     setEstaConfigurado(true);
     setMostrarConfiguracion(false);
+    const cargarConfiguracion = async () => {
+      try {
+        const configuracionGuardada =
+          await AsyncStorage.getItem("configuracion");
+        if (configuracionGuardada) {
+          const config = JSON.parse(configuracionGuardada);
+          setConfiguracion({
+            nombre: config.nombre || "",
+            rama: config.rama || "",
+            foto: config.foto || null,
+            modo: config.modo || "light",
+          });
+        }
+      } catch (error) {
+        console.error("Error al cargar la configuración:", error);
+      }
+    };
+    cargarConfiguracion();
   };
 
   const handleGoToConfiguration = () => {
@@ -45,17 +77,21 @@ export default function App() {
 
   return (
     <SafeAreaProvider>
-      <StatusBar style={"light"} />
+      <StatusBar style={configuracion.modo === "dark" ? "light" : "dark"} />
       {mostrarConfiguracion ? (
-        <Configuracion 
+        <Configuracion
           onConfigurationSaved={handleConfigurationSaved}
           isInitialSetup={!estaConfigurado}
           onGoBack={handleGoBack}
         />
       ) : estaConfigurado ? (
-        <PerfilUsuario onGoToConfiguration={handleGoToConfiguration} />
+        <PerfilUsuario 
+          onGoToConfiguration={handleGoToConfiguration}
+          configuracion={configuracion}
+          setConfiguracion={setConfiguracion}
+        />
       ) : (
-        <Configuracion 
+        <Configuracion
           onConfigurationSaved={handleConfigurationSaved}
           isInitialSetup={true}
         />
