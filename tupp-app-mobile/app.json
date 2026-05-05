@@ -13,7 +13,7 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.tuppappmobile",
+      "bundleIdentifier": "com.f4ri4sw4lter.tupp",
       "infoPlist": {
         "NSPhotoLibraryUsageDescription": "TuPP necesita acceso a tu galería para que puedas seleccionar una foto de perfil.",
         "NSPhotoLibraryAddOnlyUsageDescription": "TuPP necesita permiso para guardar fotos en tu galería."
@@ -23,7 +23,7 @@
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE"
       },
-      "package": "com.anonymous.tuppappmobile",
+      "package": "com.f4ri4sw4lter.tupp",
       "permissions": [
         "READ_EXTERNAL_STORAGE",
         "WRITE_EXTERNAL_STORAGE"
